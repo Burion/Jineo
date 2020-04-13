@@ -13,7 +13,8 @@ namespace Jineo.Helpers
             CreateMap<Project, ProjectDTO>();
             CreateMap<ProjectDTO, Project>();
 
-            
+            //User
+            CreateMap<JineoUser, UserDTO>();
         }
     }
 }
