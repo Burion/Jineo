@@ -44,6 +44,7 @@ namespace Jineo
             services.AddSingleton(mapper);
             
             services.AddDefaultIdentity<JineoUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             
             services.AddControllersWithViews();
@@ -65,7 +66,6 @@ namespace Jineo
                 app.UseHsts();
             }
 
-            IdentityDataInitializer.SeedData(userManager, roleManager);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -81,6 +81,7 @@ namespace Jineo
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+            IdentityDataInitializer.SeedData(userManager, roleManager);
         }
     }
 }
