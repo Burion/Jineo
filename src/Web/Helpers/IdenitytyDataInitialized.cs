@@ -17,7 +17,6 @@ namespace Jineo.Helpers
             RegisterUser(userManager, "SuperAdm", "superadmin@gmail.com", "qweasd", "SuperAdmin");
             RegisterUser(userManager, "Owner", "owner@gmail.com", "qweasd", "Admin");
             RegisterUser(userManager, "OrdinaryGuy", "guy@gmail.com", "qweasd");
-
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
@@ -42,7 +41,7 @@ namespace Jineo.Helpers
         public static JineoUser RegisterUser(UserManager<JineoUser> userManager, string userName, string email, string password, string role)
         {
             var user = RegisterUser(userManager, userName, email, "qweasd");
-            userManager.AddToRoleAsync(user, role).Wait();
+            userManager.AddToRoleAsync(user, role);
             return user;
         }
         public static bool RegisterRole(RoleManager<IdentityRole> roleManager, string roleName)
@@ -50,7 +49,7 @@ namespace Jineo.Helpers
             if (!roleManager.RoleExistsAsync(roleName).Result)
             {
                 IdentityRole role = new IdentityRole();
-                role.Name = "Admin";
+                role.Name = roleName;
                 IdentityResult roleResult = roleManager.CreateAsync(role).Result;
                 return roleResult.Succeeded;
             }
