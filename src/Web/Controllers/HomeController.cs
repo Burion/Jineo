@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Jineo.Models;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Jineo.Controllers
 {
@@ -18,14 +20,20 @@ namespace Jineo.Controllers
             _logger = logger;
         }
 
+        
         public IActionResult Index()
         {
             return View();
         }
 
-
+        [Authorize]
         public IActionResult Privacy()
         {
+            return View();
+        }
+        public IActionResult Newcomer()
+        {
+            
             return View();
         }
 

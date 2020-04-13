@@ -7,12 +7,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jineo.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<JineoUser>
     {
         public DbSet<Project> Projects {get;set;}
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Project>().HasData(
+                new Project() { Id = -1,  Name = "Empire State Building"}, 
+                new Project() { Id = -2,  Name = "Fuck"}
+                
+            );
+
+            builder.Entity<Project>().HasData(
+                new Project() { Id = -3,  Name = "Empire State Building"}
+            );
         }
 
         public void AddEntity<T>(T model) where T: class

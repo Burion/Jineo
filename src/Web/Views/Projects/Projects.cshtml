@@ -1,5 +1,5 @@
 @using Jineo.ViewModels
-@model ProjectPageViewModel
+@model ProjectsListPageViewModel
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,9 +12,17 @@
     <h1>@Model.Message</h1>
     <div class="container">
         <table>
-            <tr>
-                
-            </tr>
+            @foreach(var p in Model.Projects)
+            { 
+                <tr>
+                    <td>
+                        @p.Name
+                    </td>
+                    <td>
+                        Ye
+                    </td>
+                </tr>
+            }
         </table>
     </div>
 </body>

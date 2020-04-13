@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Jineo.Models;
+using AutoMapper;
+using Jineo.Helpers;
 
 namespace Jineo
 {
@@ -31,8 +33,17 @@ namespace Jineo
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase(
                     databaseName: "base"));
+            //mapper 
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            
             services.AddDefaultIdentity<JineoUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            
             services.AddControllersWithViews();
            services.AddRazorPages();
         }
