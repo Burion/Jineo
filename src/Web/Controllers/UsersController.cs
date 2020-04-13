@@ -19,5 +19,17 @@ namespace Jineo.Controllers
             userManager = _userManager;
             roleManager = _roleManager;
         }
+
+        public async Task<IActionResult> SetUserToRole(string email, string role)
+        {
+            if(!(await roleManager.RoleExistsAsync(role)))
+            {
+                throw new ArgumentException("This role doesn't exist");
+            }
+
+            var user = await userManager.FindByEmailAsync(email);
+            await userManager.AddToRoleAsync(user, role);
+            return RedirectToAction("Users");
+        }
     }
 }
