@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Jineo.Helpers
 {
-    public static class MyIdentityDataInitializer
+    public static class IdentityDataInitializer
     {
         public static void SeedData(UserManager<JineoUser> userManager, RoleManager<IdentityRole> roleManager)
         {
