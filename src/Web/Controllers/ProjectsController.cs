@@ -25,8 +25,7 @@ namespace Jineo.Controllers
         }
     
         public IActionResult Projects()
-        {
-            
+        {        
             var model = new ProjectsListPageViewModel() { Message = "hello"};
             model.Projects = mapper.Map<List<ProjectDTO>>(ctx.Projects);
             model.Message = ctx.Projects.Count().ToString();

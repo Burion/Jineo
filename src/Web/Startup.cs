@@ -65,7 +65,7 @@ namespace Jineo
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            StartupHelper.EnsureDatabaseCreated<ApplicationDbContext>(app.ApplicationServices);      
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -81,7 +81,7 @@ namespace Jineo
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-            IdentityDataInitializer.SeedData(userManager, roleManager);
+                 
         }
     }
 }

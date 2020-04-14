@@ -45,7 +45,7 @@ namespace Jineo.Controllers
         {
             UsersPageViewModel model = new UsersPageViewModel();
             model.Users = mapper.Map<List<UserDTO>>(ctx.Users);
-            return View();
+            return View(model);
         }
     }
 }

@@ -19,7 +19,6 @@ namespace Jineo.Data
         {
             base.OnModelCreating(builder);
 
-            
             builder.Entity<Project>().HasData(
                 new Project() { Id = -1,  Name = "Empire State Building"}, 
                 new Project() { Id = -2,  Name = "Fuck"}

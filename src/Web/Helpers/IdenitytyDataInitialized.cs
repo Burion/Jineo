@@ -1,60 +1,66 @@
-using System;
-using Jineo.Models;
 using Microsoft.AspNetCore.Identity;
-
+using Jineo.Models;
+ 
 namespace Jineo.Helpers
 {
-    public static class IdentityDataInitializer
+    public static class DataInit
     {
         public static void SeedData(UserManager<JineoUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
         }
-
-        public static void SeedUsers(UserManager<JineoUser> userManager)
+ 
+        private static void SeedUsers (UserManager<JineoUser> userManager)
         {
-            RegisterUser(userManager, "SuperAdm", "superadmin@gmail.com", "qweasd", "SuperAdmin");
-            RegisterUser(userManager, "Owner", "owner@gmail.com", "qweasd", "Admin");
-            RegisterUser(userManager, "OrdinaryGuy", "guy@gmail.com", "qweasd");
-        }
-
-        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
-        {
-            RegisterRole(roleManager, "Admin");
-            RegisterRole(roleManager, "SuperAdmin");
-        }
-
-        public static JineoUser RegisterUser(UserManager<JineoUser> userManager, string userName, string email, string password)
-        {
-            if (userManager.FindByNameAsync(userName).Result == null)
+            if (userManager.FindByEmailAsync("johndoe@localhost").Result == null)
             {
                 JineoUser user = new JineoUser();
-                user.UserName = userName;
-                user.Email = email;
-
-                IdentityResult result = userManager.CreateAsync(user, password).Result;
-                return user;
+                user.UserName = "johndoe@localhost";
+                user.Email = "johndoe@localhost";
+ 
+                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd1!").Result;
+ 
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "User").Wait();
+                }
             }
-            throw new Exception();
+ 
+ 
+            if (userManager.FindByEmailAsync("alex@localhost").Result == null)
+            {
+                JineoUser user = new JineoUser();
+                user.UserName = "alex@localhost";
+                user.Email = "alex@localhost";
+ 
+                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd1!").Result;
+ 
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                }
+            }
         }
-        public static JineoUser RegisterUser(UserManager<JineoUser> userManager, string userName, string email, string password, string role)
+ 
+        private static void SeedRoles (RoleManager<IdentityRole> roleManager)
         {
-            var user = RegisterUser(userManager, userName, email, "qweasd");
-            userManager.AddToRoleAsync(user, role);
-            return user;
-        }
-        public static bool RegisterRole(RoleManager<IdentityRole> roleManager, string roleName)
-        {
-            if (!roleManager.RoleExistsAsync(roleName).Result)
+            if (!roleManager.RoleExistsAsync("User").Result)
             {
                 IdentityRole role = new IdentityRole();
-                role.Name = roleName;
-                IdentityResult roleResult = roleManager.CreateAsync(role).Result;
-                return roleResult.Succeeded;
+                role.Name = "User";
+                IdentityResult roleResult = roleManager.
+                CreateAsync(role).Result;
             }
-            return false;
+ 
+ 
+            if (!roleManager.RoleExistsAsync("Admin").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Admin";
+                IdentityResult roleResult = roleManager.
+                CreateAsync(role).Result;
+            }
         }
-
     }
 }
