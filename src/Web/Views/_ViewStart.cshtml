@@ -1,7 +1,14 @@
 ﻿@{
     if(this.User.Identity.IsAuthenticated)
     {
-        Layout = "/Views/Shared/_Layout.cshtml";
+        if(this.User.IsInRole("SuperAdmin"))
+        {
+            Layout = "/Views/Shared/_LayoutSUperAdmin.cshtml";
+        }
+        else
+        {
+            Layout = "/Views/Shared/_Layout.cshtml";
+        }
     }
     else    
     {
