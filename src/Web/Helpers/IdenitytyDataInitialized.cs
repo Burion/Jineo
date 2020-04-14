@@ -13,28 +13,30 @@ namespace Jineo.Helpers
  
         private static void SeedUsers (UserManager<JineoUser> userManager)
         {
-            if (userManager.FindByEmailAsync("johndoe@localhost").Result == null)
+            if (userManager.FindByEmailAsync("super@localhost").Result == null)
             {
                 JineoUser user = new JineoUser();
-                user.UserName = "johndoe@localhost";
-                user.Email = "johndoe@localhost";
+                user.UserName = "super@localhost";
+                user.Email = "super@localhost";
+                user.EmailConfirmed = true;
  
-                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd1!").Result;
+                IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
  
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(user, "User").Wait();
+                    userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
                 }
             }
  
  
-            if (userManager.FindByEmailAsync("alex@localhost").Result == null)
+            if (userManager.FindByEmailAsync("admin@localhost").Result == null)
             {
                 JineoUser user = new JineoUser();
-                user.UserName = "alex@localhost";
-                user.Email = "alex@localhost";
+                user.UserName = "admin@localhost";
+                user.Email = "admin@localhost";
+                user.EmailConfirmed = true;
  
-                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd1!").Result;
+                IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
  
                 if (result.Succeeded)
                 {
@@ -45,10 +47,10 @@ namespace Jineo.Helpers
  
         private static void SeedRoles (RoleManager<IdentityRole> roleManager)
         {
-            if (!roleManager.RoleExistsAsync("User").Result)
+            if (!roleManager.RoleExistsAsync("SuperAdmin").Result)
             {
                 IdentityRole role = new IdentityRole();
-                role.Name = "User";
+                role.Name = "SuperAdmin";
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;
             }
