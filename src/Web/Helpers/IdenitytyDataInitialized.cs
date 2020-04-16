@@ -34,6 +34,7 @@ namespace Jineo.Helpers
                 JineoUser user = new JineoUser();
                 user.UserName = "admin@localhost";
                 user.Email = "admin@localhost";
+                user.CompanyId = -1;
                 user.EmailConfirmed = true;
  
                 IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;

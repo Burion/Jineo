@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Jineo.Models;
 using AutoMapper;
 using Jineo.Helpers;
+using Jineo.Extentions;
 
 namespace Jineo
 {
@@ -45,7 +46,8 @@ namespace Jineo
             
             services.AddDefaultIdentity<JineoUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddClaimsPrincipalFactory<JineoUserClaimsPrincipalFactory>();
             
             services.AddControllersWithViews();
            services.AddRazorPages();
