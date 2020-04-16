@@ -7,6 +7,6 @@ namespace Jineo.ViewModels
 {
     public class UsersPageViewModel
     {
-        public IEnumerable<UserDTO> Users;
+        public List<UserDTO> Users;
     }
 }

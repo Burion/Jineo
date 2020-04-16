@@ -28,6 +28,11 @@ namespace Jineo.Data
             builder.Entity<Project>().HasData(
                 new Project() { Id = -3,  Name = "Empire State Building"}
             );
+
+            builder.Entity<Company>().HasData(
+                new Company() { Id = -1,  Name = "ArchitectureCompany" },
+                new Company() { Id = -2, Name = "Intetics"}
+            );
         }
 
         public void AddEntity<T>(T model) where T: class

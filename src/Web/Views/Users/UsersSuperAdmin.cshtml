@@ -1,0 +1,38 @@
+
+@using Jineo.ViewModels
+@model UsersPageViewModel
+@using Jineo.Helpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border="1px" solid black>
+        @foreach(var user in Model.Users)
+        {
+            <tr>
+                <form asp-action="SetUserToRole">
+                <td><p>@user.Email</p></td>
+                <input type="text" name="email" value="@user.Email" hidden>
+                <td>
+                        <select name="role" id="">
+                            @foreach(var role in Enum.GetValues(typeof(Roles)))
+                            {
+                                <option value="@role.ToString()">
+                                <p>@role.ToString()</p> 
+                                </option>
+                            }
+                        </select>
+                        <button type="submit">OK</button>
+                    </td>
+                </form>
+                
+            </tr>
+        }
+    </table>
+</body>
+</html>

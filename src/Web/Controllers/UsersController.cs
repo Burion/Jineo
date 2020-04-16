@@ -11,6 +11,8 @@ using Jineo.ViewModels;
 using Jineo.Data;
 using AutoMapper;
 using Jineo.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Jineo.Extentions;
 
 namespace Jineo.Controllers
 {
@@ -35,16 +37,29 @@ namespace Jineo.Controllers
             {
                 throw new ArgumentException("This role doesn't exist");
             }
-
+            
             var user = await userManager.FindByEmailAsync(email);
+            await userManager.RemoveFromRolesAsync(user, roleManager.Roles.Select(r => r.Name));
             await userManager.AddToRoleAsync(user, role);
-            return RedirectToAction("Users");
+            return RedirectToAction("UsersSuperAdmin");
         }
 
         public async Task<IActionResult> Users()
         {
             UsersPageViewModel model = new UsersPageViewModel();
             model.Users = mapper.Map<List<UserDTO>>(ctx.Users);
+            return View(model);
+        }
+
+        [Authorize(Roles="SuperAdmin")]
+        public async Task<IActionResult> UsersSuperAdmin()
+        {
+            UsersPageViewModel model = new UsersPageViewModel();
+            model.Users = mapper.Map<List<UserDTO>>(ctx.Users);
+            for(int x = 0; x < model.Users.Count(); x++)
+            {
+                model.Users[x].Role = userManager.GetRolesAsync(userManager.FindByEmailAsync(model.Users[x].Email).Result).Result.First();
+            }
             return View(model);
         }
     }

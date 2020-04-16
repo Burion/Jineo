@@ -1,4 +1,5 @@
 ﻿@{
+    @using Jineo.Extentions
     if(this.User.Identity.IsAuthenticated)
     {
         if(this.User.IsInRole("SuperAdmin"))
@@ -7,7 +8,14 @@
         }
         else
         {
-            Layout = "/Views/Shared/_Layout.cshtml";
+            if(User.Identity.IsEmployed())
+            {
+                Layout = "/Views/Shared/_Layout.cshtml";
+            }
+            else
+            {
+                Layout = "/Views/Shared/_LayoutGuest.cshtml";
+            }
         }
     }
     else    
