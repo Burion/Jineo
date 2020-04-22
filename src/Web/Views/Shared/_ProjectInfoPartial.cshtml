@@ -1,0 +1,49 @@
+@using Jineo.ViewModels
+@model PartialModel 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <div class="" id="info"></div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+
+<script>
+    function loadProjectInfo(_id){
+        $.ajax(
+            {
+            type: "GET",
+            data: {
+                id: _id,
+            },
+            url: '/projectinfo',
+            success: function (response) {
+                r = ""
+                r += '<div class="container-flex container-center">'
+                r += '<img class="main-image" src="https://images.adsttc.com/media/images/5e66/5dc0/b357/65bd/db00/0024/newsletter/10.jpg?1583766967" alt="" width="200">'
+                r += '<div class="geninfo">'
+                r += '<div class="geninfo-name-status">'
+                r += '<h1 class="geninfo-name">' + response.project.name + '</h1>'
+                r += '<h2 class="alert-sign"></h2>'
+                r += '</div>'
+                r += '<label for="">office building</label>'
+                r += '<p class="geninfo-description">'
+                r += 'al;ksdfkasdjf ;lkasdmf;lk jad;lkf a;lkdfj l;adskfj ;lkadsjf l;kasjdf kadjfl;k aj;lfkjas;ldk'
+                r += '</p>'
+                r += '</div>'
+                r += '</div>'
+                $('#info').html(r)
+            }
+        }
+        )
+    }
+</script>
+
+</html>

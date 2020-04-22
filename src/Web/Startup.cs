@@ -46,8 +46,8 @@ namespace Jineo
             
             services.AddDefaultIdentity<JineoUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddClaimsPrincipalFactory<JineoUserClaimsPrincipalFactory>();
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+                // .AddClaimsPrincipalFactory<JineoUserClaimsPrincipalFactory>();
             
             services.AddControllersWithViews();
            services.AddRazorPages();

@@ -7,17 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Jineo.Models;
 using Microsoft.AspNetCore.Authorization;
-
+using Jineo.ViewModels;
+using Jineo.Data;
+using AutoMapper;
+using Jineo.DTOs;
 
 namespace Jineo.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        readonly ApplicationDbContext ctx;
+        readonly IMapper mapper;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext ctx, IMapper mapper)
         {
             _logger = logger;
+            this.ctx = ctx;
+            this.mapper = mapper;
         }
 
         
@@ -36,6 +42,7 @@ namespace Jineo.Controllers
             
             return View();
         }
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

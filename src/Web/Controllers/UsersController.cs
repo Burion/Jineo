@@ -62,5 +62,23 @@ namespace Jineo.Controllers
             }
             return View(model);
         }
+
+        [Authorize(Roles="Admin")]
+        public async Task<IActionResult> UsersAdmin()
+        {
+            UsersPageViewModel model = new UsersPageViewModel();
+            
+            return View(model);
+        }
+
+        
+
+        public async Task<IActionResult> AddUserToCompanySuper(string email, string comId)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            user.CompanyId = int.Parse(comId);
+            await userManager.UpdateAsync(user);
+            return RedirectToAction("UsersSuperAdmin");
+        }
     }
 }

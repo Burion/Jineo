@@ -1,0 +1,58 @@
+@using Jineo.ViewModels
+@model PartialModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <div id="dataTable">
+    </div>
+        
+</body>
+
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+<script>
+    function getUsersList(_id){
+        $.ajax(
+            {
+            type: "GET",
+            data: {
+                id: _id,
+            },
+            url: '/projectusers',
+            success: function (response) {
+                var r = new Array()
+                var j = -1
+                for (var key=0, size=response.users.length; key<size; key++){
+                r.push('<div style="width=100%">')
+                r.push('<div class="user-list-line user-list-line-boarder">')                    
+                r.push('<div class="user-list-element">')        
+                r.push(response.users[key].userName)
+                r.push('</div>')
+                r.push('<div class="divider-vertical"></div>')
+                r.push('<div class="user-list-element">')
+                r.push(response.users[key].email)
+                r.push('</div>')
+                r.push('<div class="divider-vertical"></div>')
+                r.push('<div class="user-list-element">')
+                r.push(response.users[key].email)
+                r.push('</div>')
+                r.push('<div class="divider-vertical"></div>')
+                r.push('<div class="user-list-element">')
+                r.push('✖')  
+                r.push('</div>')
+                r.push('</div>')
+                }
+                console.log(r)
+                $('#dataTable').html(r.join(''));
+            }
+            }
+        )
+    }
+</script>

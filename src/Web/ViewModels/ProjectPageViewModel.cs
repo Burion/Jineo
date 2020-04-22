@@ -4,9 +4,9 @@ using Jineo.DTOs;
 
 namespace Jineo.ViewModels
 {
-    public class ProjectsListPageViewModel
+    public class ProjectPageViewModel
     {
-        public string Message { get; set; }
-        public List<ProjectDTO> Projects {get; set;}
+        public ProjectDTO Project {get;set;}
+        
     }
 }

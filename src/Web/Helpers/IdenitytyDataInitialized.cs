@@ -16,10 +16,11 @@ namespace Jineo.Helpers
             if (userManager.FindByEmailAsync("super@localhost").Result == null)
             {
                 JineoUser user = new JineoUser();
+                user.Id = "2";
                 user.UserName = "super@localhost";
                 user.Email = "super@localhost";
                 user.EmailConfirmed = true;
- 
+                user.CompanyId = -1;
                 IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
  
                 if (result.Succeeded)
@@ -27,11 +28,22 @@ namespace Jineo.Helpers
                     userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
                 }
             }
+            if (userManager.FindByEmailAsync("normal@localhost").Result == null)
+            {
+                JineoUser user = new JineoUser();
+                user.Id = "3";
+                user.UserName = "normal@localhost";
+                user.Email = "normal@localhost";
+                user.EmailConfirmed = true;
+                IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
+            }
  
  
             if (userManager.FindByEmailAsync("admin@localhost").Result == null)
             {
+                
                 JineoUser user = new JineoUser();
+                user.Id = "1";
                 user.UserName = "admin@localhost";
                 user.Email = "admin@localhost";
                 user.CompanyId = -1;

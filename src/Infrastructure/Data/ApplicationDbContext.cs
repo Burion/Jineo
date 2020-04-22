@@ -10,6 +10,7 @@ namespace Jineo.Data
     public class ApplicationDbContext : IdentityDbContext<JineoUser>
     {
         public DbSet<Project> Projects {get;set;}
+        public DbSet<UserProject> UsersProjects {get;set;} 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -18,7 +19,26 @@ namespace Jineo.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
+            builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
+            builder.Entity<UserProject>().HasOne(up => up.Project).WithMany(p => p.UsersProjects).HasForeignKey(up => up.ProjectId);
+            builder.Entity<UserProject>().HasData(
+                new UserProject()
+                {
+                    JineoUserId = "1",
+                    ProjectId = -1 
+                },
+                new UserProject()
+                {
+                    JineoUserId = "2",
+                    ProjectId = -1 
+                },
+                new UserProject()
+                {
+                    JineoUserId = "1",
+                    ProjectId = -2 
+                }
+            );
+                
             builder.Entity<Project>().HasData(
                 new Project() { Id = -1,  Name = "Empire State Building"}, 
                 new Project() { Id = -2,  Name = "Fuck"}

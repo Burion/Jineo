@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Jineo.Models
 {
@@ -7,6 +8,7 @@ namespace Jineo.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime CreationDate { get; set; }
+        public IEnumerable<UserProject> UsersProjects {get;set;}
 
     }
 }

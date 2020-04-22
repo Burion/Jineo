@@ -1,0 +1,44 @@
+
+@using Jineo.ViewModels
+@model UsersPageViewModel
+@using Jineo.Helpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="container-flex">
+        <div class="card-shadow container-40">
+            <div class="card-header card-header-city">
+                My projects
+            </div>
+            <div class="card-body container-100">
+                    @Html.Partial("_ProjectsListPartial", new PartialModel() { Id = -1 })
+            </div>
+        </div>
+        
+        <div class="card-shadow container-60">
+            <div class="card-header card-header-city">
+                Info
+            </div>
+            <div class="card-body">
+                @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
+                @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1 })
+                @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1 })
+            </div>
+            
+        </div>
+    </div>
+</body>
+<script>
+    window.onload = function(){
+        loadProjects()
+        
+    }
+</script>
+</html>

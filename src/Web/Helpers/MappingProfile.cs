@@ -15,6 +15,9 @@ namespace Jineo.Helpers
 
             //User
             CreateMap<JineoUser, UserDTO>();
+
+            //Company
+            CreateMap<Company, CompanyDTO>();
         }
     }
 }
