@@ -10,6 +10,8 @@ namespace Jineo.Data
     public class ApplicationDbContext : IdentityDbContext<JineoUser>
     {
         public DbSet<Project> Projects {get;set;}
+        public DbSet<Issue> Issues {get;set;}
+        public DbSet<Comment> Comments {get;set;}
         public DbSet<UserProject> UsersProjects {get;set;} 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -21,6 +23,12 @@ namespace Jineo.Data
             base.OnModelCreating(builder);
             builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
             builder.Entity<UserProject>().HasOne(up => up.Project).WithMany(p => p.UsersProjects).HasForeignKey(up => up.ProjectId);
+            builder.Entity<Issue>().HasData(
+                new Issue() { Id = -1, ProjectId = -1, UserId = "1", Content = "That's bad"}
+            );
+            builder.Entity<Comment>().HasData(
+                new Comment(){ Id = -1, UserId = "1", Date = DateTime.Now, IssueId = -1, Text = "Hell ya!"}
+            );
             builder.Entity<UserProject>().HasData(
                 new UserProject()
                 {

@@ -74,5 +74,31 @@ namespace Jineo.Controllers
             return new JsonResult(new { project });
         }
 
+        [Route("issues")]
+        public async Task<JsonResult> Issues (string id)
+        {
+            var issues = ctx.Issues.Include(i => i.User).Include(i => i.Comments).Where(i => i.ProjectId == int.Parse(id));
+            var issuesDTO = mapper.Map<IssueDTO[]>(issues);
+            return new JsonResult(new { issues = issuesDTO });
+        }
+
+        [Route("addcomment")]
+
+        public IActionResult AddComment(string id, string content)
+        {
+            ctx.Comments.Add(new Comment() { Date  = DateTime.Now, IssueId = int.Parse(id), Text = content, UserId = User.Identity.Name });
+            ctx.SaveChanges();
+            return new JsonResult(new {status = "it's ok"});
+        }
+
+        [Route("addissue")]
+
+        public IActionResult AddComment(string projectid, string content, string title)
+        {
+            ctx.Issues.Add( new Issue() { ProjectId = int.Parse(projectid), Content = content, Title = title });
+            ctx.SaveChanges();
+            return new JsonResult(new {status = "it's ok"});
+        }
     }
+
 }

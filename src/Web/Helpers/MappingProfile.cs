@@ -18,6 +18,14 @@ namespace Jineo.Helpers
 
             //Company
             CreateMap<Company, CompanyDTO>();
+
+            //Issue
+            CreateMap<Issue, IssueDTO>();
+
+            //Comments
+            CreateMap<Comment, CommentDTO>();
+
+            
         }
     }
 }

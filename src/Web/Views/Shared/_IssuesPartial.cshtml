@@ -9,37 +9,119 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="accordion" id="accordionExample">
-        <div class="card">
-        <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                [CLOSED] Troubles with pipes
-            </button>
-            </h2>
-        </div>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-            <div class="card-body">
-                
-                <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-                <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-                
-                <div class="comments">
-                    <div class="comment">
-                    <a class="comment-img" href="#non">
-                        <img src="https://www.evolutionsociety.org/userdata/news_picupload/pic_sid189-0-norm.jpg" alt="" width="50" height="50">
-                    </a>
-                    <div class="comment-body">
-                        <div class="text">
-                        <p>Hello, this is an example from me</p>
-                        </div>
-                        <p class="attribution">by <a href="#non">Besnik Hetemi</a> at 14:23pm, 4 Dec 2015</p>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
+    <p>
+    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          Add new issue
+    </a>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+        <label for="">Title</label>
+        <input class="form-control" id="issuetitle" type="text" placeholder="Write title here">
+        <label for="">Details</label>
+        <textarea id="issuedetails" name="" id="" cols="30" rows="10" class="form-control" placeholder="Write detailed description here"></textarea>
+        
+        <a onclick="addIssue()" class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
         </div>
     </div>
+    <div class="accordion" id="accordionExample">
+        
+    </div>
 </body>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+    var projectId
+    function addComment(issueId) {
+            var _content = document.getElementById(issueId + '-input').value
+            $.ajax(
+            {
+            type: "GET",
+            data: {
+                id: issueId,
+                content: _content
+            },
+            url: '/addcomment',
+            success: function (response) {
+                loadIssues(projectId)
+            }
+            }
+            )
+        }
+
+    function addIssue() {
+        var _title = document.getElementById('issuetitle').value
+        var _content = document.getElementById('issuedetails').value
+        $.ajax(
+        {
+        type: 'POST',
+        data: {
+            content: _content,
+            projectid: projectId,
+            title: _title
+        },
+        url: '/addissue',
+        success: function (response) {
+            loadIssues(projectId)
+        }
+        }
+        )
+    }
+
+    function loadIssues(_id) {
+        $.ajax(
+            {
+            type: "GET",
+            data: {
+                id: _id
+            },
+            url: '/issues',
+            success: function (response) {
+                projectId = _id
+                r = ""
+                for(var i = 0; i < response.issues.length; i++) {   
+                    r += '<div class="card">'
+                    r += '<div class="card-header" id="headingOne">'
+                    r += '<h2 class="mb-0">'
+                    r += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + i +'" aria-expanded="true" aria-controls="collapse' + i +'">'
+                    r += response.issues[i].content
+                    r += '</button>'
+                    r += '</h2>'
+                    r += '</div>'
+                    r += '<div id="collapse' + i +'" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">'
+                    r += '<div class="card-body">'
+                    r += ''
+                    r += '<div id="issues" class="comments">'
+                    for(var k = 0; k < response.issues[i].comments.length; k++)
+                    {
+                        r += '<article class="comment">'
+                        r += '<a class="comment-img" href="#non">'
+                        r += '<img src="https://image.shutterstock.com/image-photo/portrait-smiling-red-haired-millennial-260nw-1194497251.jpg" alt="" width="50" height="50">'
+                        r += '</a>'
+                        r += '<div class="comment-body">'
+                        r += '<div class="text">'
+                        r += '<p>' + response.issues[i].comments[k].text + '</p>'
+                        r += '</div>'
+                        r += '<p class="attribution">by <a href="#non">Besnik Hetemi</a> at 14:23pm, 4 Dec 2015</p>'
+                        r += '</div>'
+                        r += '</article>'
+                    }
+                    r += '<input class="form-control" id="' +  response.issues[i].id + '-input"></input>'
+                    r += '<button class="btn btn-primary" onclick="addComment(' + response.issues[i].id +  ') "></button>'
+                    r += '</div>'
+                    r += '</div>'
+                    r += '</div>'
+                    r += '</div>'
+                    console.log(response.issues[i].comments)
+                }
+                $('#accordionExample').html(r)
+            
+            }
+            
+        })
+    } 
+        
+
+</script>
+
 </html>
