@@ -1,16 +1,23 @@
 var canvas
-function initBlueprint(building, sensors) {
 
+var sensorsX 
+var sensorsY
+function initBlueprint(building, sensors) {
+    
     var scaled = false
     var imageUrl = 'https://cdn.dribbble.com/users/85782/screenshots/826294/untitled-1.png'
-
+    
     function wid() {
         document.getElementById('c').height = 40 + building.length*260
         document.getElementById('c').width = 100 + maxRooms(building)*250
     }
-                
+    
     wid()
-    canvas = new fabric.Canvas('c');
+    if(canvas == null)
+    {
+        canvas = new fabric.Canvas('c');
+    }
+    canvas.clear()
     canvas.selection = false
     printBuilding(building, canvas)
     console.log(sensors.length)
@@ -57,23 +64,27 @@ function initBlueprint(building, sensors) {
     
 
     canvas.on('mouse:dblclick', function(opt) {
-    var delta = opt.e.deltaY;
-    var pointer = canvas.getPointer(opt.e);
-    var zoom = canvas.getZoom();
-    if(scaled) {
-        zoom = zoom - 2;
-        scaled = false
-    }
-    else {
-        zoom = zoom + 2;
-        scaled = true
-    }
-    if (zoom > 4) zoom = 4;
-    if (zoom < 0.5) zoom = 0.5;
-    canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-    opt.e.preventDefault();
-    opt.e.stopPropagation();
-    });
+        // var delta = opt.e.deltaY;
+        // var pointer = canvas.getPointer(opt.e);
+        // var zoom = canvas.getZoom();
+        // if(scaled) {
+        //     zoom = zoom - 2;
+        //     scaled = false
+        // }
+        // else {
+        //     zoom = zoom + 2;
+        //     scaled = true
+        // }
+        // if (zoom > 4) zoom = 4;
+        // if (zoom < 0.5) zoom = 0.5;
+        // canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+        // opt.e.preventDefault();
+        // opt.e.stopPropagation();
+        $('#exampleModalCenter').modal()
+        var pointer = canvas.getPointer(opt.e)
+        sensorsX = opt.e.offsetX
+        sensorsY = opt.e.offsetY
+        });
 }
 
 function selectSensor(sensorId) {

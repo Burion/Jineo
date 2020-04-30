@@ -46,14 +46,73 @@
     </div>
 
   </div>
+
+
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="modal" class="modal-body">
+          <label for="">Name of sensor:</label>
+          <input id='sensorname' class="form-control" type="">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button onclick="addSensor()" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 <script>
+  function addSensor() {
+    var name = document.getElementById('sensorname').value
+    $.ajax(
+    {
+    type: 'POST',
+    data: {
+      projectId: '-1',
+      name: name,
+      x: sensorsX,
+      y: sensorsY
+    },
+    url: '/addsensor',
+    success: function (response) {
+      init()
+    }
+    }
+    )
+  }
     window.onload = function() {
         loadProjectInfo('@Model.Project.Id')
         getUsersList('@Model.Project.Id')
         loadIssues('@Model.Project.Id')
-        initBlueprint(content.building, content.sensors)
+        var sensors = [];
+        init() 
     }
+
+    function init()
+    {
+      $.ajax(
+        {
+        type: 'GET',
+        data: {
+            sensorId: '45'
+        },
+        url: '/getsensors',
+        success: function (response) {
+          sensors = response.sensors;
+          initBlueprint(content.building, sensors)
+        }
+      }
+      )
+    }
+    
 </script>
 </html>
