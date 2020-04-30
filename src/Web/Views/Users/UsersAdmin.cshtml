@@ -21,18 +21,19 @@
                     @Html.Partial("_ProjectsListPartial", new PartialModel() { Id = -1 })
             </div>
         </div>
-        
-        <div class="card-shadow container-60">
-            <div class="card-header card-header-city">
-                Info
-            </div>
-            <div class="card-body">
-                @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
-                @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1 })
-                @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1 })
+        <div style="display: flex;">
+            <div class="card-shadow container-60">
+                <div class="card-header card-header-city">
+                    Info
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
+                    @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1 })
+                    @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1 })
+                </div>  
             </div>
             
-        </div>
+        </div>   
     </div>
 </body>
 <script>
