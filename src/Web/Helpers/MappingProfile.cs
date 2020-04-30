@@ -25,6 +25,9 @@ namespace Jineo.Helpers
             //Comments
             CreateMap<Comment, CommentDTO>();
 
+            //Sensors
+            CreateMap<Sensor, SensorDTO>();
+
             
         }
     }
