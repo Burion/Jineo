@@ -13,6 +13,7 @@ namespace Jineo.Data
         public DbSet<Issue> Issues {get;set;}
         public DbSet<Comment> Comments {get;set;}
         public DbSet<UserProject> UsersProjects {get;set;} 
+        public DbSet<Sensor> Sensors { get;set;} 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -21,6 +22,10 @@ namespace Jineo.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Sensor>().HasData(
+                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f }
+            );
             builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
             builder.Entity<UserProject>().HasOne(up => up.Project).WithMany(p => p.UsersProjects).HasForeignKey(up => up.ProjectId);
             builder.Entity<Issue>().HasData(

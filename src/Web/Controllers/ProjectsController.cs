@@ -99,6 +99,21 @@ namespace Jineo.Controllers
             ctx.SaveChanges();
             return new JsonResult(new {status = "it's ok"});
         }
+
+        [Route("getsensors")]
+        public JsonResult GetSensors(string projectId)
+        {
+            var sensors = mapper.Map<SensorDTO[]>(ctx.Sensors);
+            return new JsonResult(new { sensors });
+        }
+
+        [Route("addsensor")]
+        public JsonResult AddSensor(string projectId, string x, string y, string name) 
+        {
+            ctx.Sensors.Add(new Sensor() { ProjectId = int.Parse(projectId), Name = name, X = float.Parse(x), Y = float.Parse(y) });
+            ctx.SaveChanges();
+            return new JsonResult( new { Message = "Sensor was added" });
+        }
     }
 
 }
