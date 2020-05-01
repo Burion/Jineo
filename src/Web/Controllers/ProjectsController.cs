@@ -114,6 +114,14 @@ namespace Jineo.Controllers
             ctx.SaveChanges();
             return new JsonResult( new { Message = "Sensor was added" });
         }
+
+        [Route("getcomments")]
+        public JsonResult GetComments(string id)
+        {
+            var comments_ = ctx.Issues.Include(i => i.Comments).Single(i => i.Id == int.Parse(id)).Comments;
+            var comments = mapper.Map<CommentDTO[]>(comments_);
+            return new JsonResult( new { comments });
+        }
     }
 
 }

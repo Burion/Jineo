@@ -43,7 +43,7 @@
             },
             url: '/addcomment',
             success: function (response) {
-                loadIssues(projectId)
+                updateComments(issueId)
             }
             }
             )
@@ -63,6 +63,36 @@
         url: '/addissue',
         success: function (response) {
             loadIssues(projectId)
+        }
+        }
+        )
+    }
+
+    function updateComments(id) {
+        $.ajax(
+        {
+        type: 'GET',
+        data: {
+            id: id
+        },
+        url: '/getcomments',
+        success: function (response) {
+            r = ''
+            for(var k = 0; k < response.comments.length; k++)
+            {
+                r += '<article class="comment">'
+                r += '<a class="comment-img" href="#non">'
+                r += '<img src="https://image.shutterstock.com/image-photo/portrait-smiling-red-haired-millennial-260nw-1194497251.jpg" alt="" width="50" height="50">'
+                r += '</a>'
+                r += '<div class="comment-body">'
+                r += '<div class="text">'
+                r += '<p>' + response.comments[k].text + '</p>'
+                r += '</div>'
+                r += '<p class="attribution">by <a href="#non">Besnik Hetemi</a> at 14:23pm, 4 Dec 2015</p>'
+                r += '</div>'
+                r += '</article>'
+            }
+            document.getElementById('issue-' + id).innerHTML = r
         }
         }
         )
@@ -91,7 +121,8 @@
                     r += '<div id="collapse' + i +'" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">'
                     r += '<div class="card-body">'
                     r += ''
-                    r += '<div id="issues" class="comments">'
+                    r += '<div class="comments">'
+                    r += '<div id="issue-' + response.issues[i].id + '">'
                     for(var k = 0; k < response.issues[i].comments.length; k++)
                     {
                         r += '<article class="comment">'
@@ -106,6 +137,7 @@
                         r += '</div>'
                         r += '</article>'
                     }
+                    r += '</div>'
                     r += '<input class="form-control" id="' +  response.issues[i].id + '-input"></input>'
                     r += '<button class="btn btn-primary" onclick="addComment(' + response.issues[i].id +  ') "></button>'
                     r += '</div>'
