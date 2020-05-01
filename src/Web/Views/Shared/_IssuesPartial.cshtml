@@ -90,7 +90,7 @@
                 r += '<div class="text">'
                 r += '<p>' + response.comments[k].text + '</p>'
                 r += '</div>'
-                r += '<p class="attribution">by <a href="#non">Besnik Hetemi</a> at 14:23pm, 4 Dec 2015</p>'
+                r += '<p class="attribution">by <a href="#non">' + response.comments[k].user.email  + '</a> at ' + response.comments[k].date +'</p>'
                 r += '</div>'
                 r += '</article>'
             }
@@ -116,13 +116,13 @@
                     r += '<div class="card-header" id="headingOne">'
                     r += '<h2 class="mb-0">'
                     r += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + i +'" aria-expanded="true" aria-controls="collapse' + i +'">'
-                    r += response.issues[i].content
+                    r += response.issues[i].title
                     r += '</button>'
                     r += '</h2>'
                     r += '</div>'
                     r += '<div id="collapse' + i +'" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">'
                     r += '<div class="card-body">'
-                    r += ''
+                    r += '<p> ' + response.issues[i].content + ' </p>'
                     r += '<div class="comments">'
                     r += '<div id="issue-' + response.issues[i].id + '">'
                     for(var k = 0; k < response.issues[i].comments.length; k++)
@@ -135,7 +135,7 @@
                         r += '<div class="text">'
                         r += '<p>' + response.issues[i].comments[k].text + '</p>'
                         r += '</div>'
-                        r += '<p class="attribution">by <a href="#non">Besnik Hetemi</a> at 14:23pm, 4 Dec 2015</p>'
+                        r += '<p class="attribution">by <a href="#non">' + response.issues[i].comments[k].user.email  + '</a> at ' + response.issues[i].comments[k].date +'</p>'
                         r += '</div>'
                         r += '</article>'
                     }

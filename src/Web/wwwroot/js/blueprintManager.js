@@ -16,75 +16,77 @@ function initBlueprint(building, sensors) {
     if(canvas == null)
     {
         canvas = new fabric.Canvas('c');
+        canvas.on('mouse:over', function(e) {
+            if(e.target == null)
+                return
+            if(e.target.type == 'room')
+            {
+                e.target.set('opacity', '0.7');
+            }
+    
+            if(e.target.type == 'sensor')
+            {
+                e.target.set('stroke', 'red');
+            }
+        canvas.renderAll();
+    
+        });
+    
+        canvas.on('mouse:out', function(e) {
+            if(e.target.type == 'room')
+            {
+                e.target.set('opacity', '0.4');
+            }
+    
+            if(e.target.type == 'sensor')
+            {
+                e.target.set('stroke', 'blue');
+            }
+            canvas.renderAll();
+        });
+    
+        canvas.on('mouse:down', function(opt) {
+            selectSensor(opt.target.id, canvas)
+        })
+    
+        
+    
+        canvas.on('mouse:dblclick', function(opt) {
+            // var delta = opt.e.deltaY;
+            // var pointer = canvas.getPointer(opt.e);
+            // var zoom = canvas.getZoom();
+            // if(scaled) {
+            //     zoom = zoom - 2;
+            //     scaled = false
+            // }
+            // else {
+            //     zoom = zoom + 2;
+            //     scaled = true
+            // }
+            // if (zoom > 4) zoom = 4;
+            // if (zoom < 0.5) zoom = 0.5;
+            // canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+            // opt.e.preventDefault();
+            // opt.e.stopPropagation();
+            $('#exampleModalCenter').modal()
+            var pointer = canvas.getPointer(opt.e)
+            sensorsX = opt.e.offsetX
+            sensorsY = opt.e.offsetY
+            });
     }
     canvas.clear()
     canvas.selection = false
     printBuilding(building, canvas)
+    console.log('sensors lenght:')
     console.log(sensors.length)
-    console.log('fuck')
+
     printSensors(sensors, canvas)
     canvas.setBackgroundColor({source: imageUrl, repeat: 'repeat'}, function () {
         canvas.renderAll();
     });
     canvas.renderAll()
 
-    canvas.on('mouse:over', function(e) {
-        if(e.target == null)
-            return
-        if(e.target.type == 'room')
-        {
-            e.target.set('opacity', '0.7');
-        }
 
-        if(e.target.type == 'sensor')
-        {
-            e.target.set('stroke', 'red');
-        }
-    canvas.renderAll();
-
-    });
-
-    canvas.on('mouse:out', function(e) {
-        if(e.target.type == 'room')
-        {
-            e.target.set('opacity', '0.4');
-        }
-
-        if(e.target.type == 'sensor')
-        {
-            e.target.set('stroke', 'blue');
-        }
-        canvas.renderAll();
-    });
-
-    canvas.on('mouse:down', function(opt) {
-        selectSensor(opt.target.id, canvas)
-    })
-
-    
-
-    canvas.on('mouse:dblclick', function(opt) {
-        // var delta = opt.e.deltaY;
-        // var pointer = canvas.getPointer(opt.e);
-        // var zoom = canvas.getZoom();
-        // if(scaled) {
-        //     zoom = zoom - 2;
-        //     scaled = false
-        // }
-        // else {
-        //     zoom = zoom + 2;
-        //     scaled = true
-        // }
-        // if (zoom > 4) zoom = 4;
-        // if (zoom < 0.5) zoom = 0.5;
-        // canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-        // opt.e.preventDefault();
-        // opt.e.stopPropagation();
-        $('#exampleModalCenter').modal()
-        var pointer = canvas.getPointer(opt.e)
-        sensorsX = opt.e.offsetX
-        sensorsY = opt.e.offsetY
-        });
 }
 
 function selectSensor(sensorId) {

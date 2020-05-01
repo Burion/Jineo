@@ -86,7 +86,8 @@ namespace Jineo.Controllers
 
         public IActionResult AddComment(string id, string content)
         {
-            ctx.Comments.Add(new Comment() { Date  = DateTime.Now, IssueId = int.Parse(id), Text = content, UserId = User.Identity.Name });
+            var user = ctx.Users.Single(u => u.UserName == User.Identity.Name);
+            ctx.Comments.Add(new Comment() { Date  = DateTime.Now, IssueId = int.Parse(id), Text = content, UserId = user.Id });
             ctx.SaveChanges();
             return new JsonResult(new {status = "it's ok"});
         }
@@ -118,7 +119,7 @@ namespace Jineo.Controllers
         [Route("getcomments")]
         public JsonResult GetComments(string id)
         {
-            var comments_ = ctx.Issues.Include(i => i.Comments).Single(i => i.Id == int.Parse(id)).Comments;
+            var comments_ = ctx.Issues.Include(i => i.Comments).ThenInclude(c => c.User).Single(i => i.Id == int.Parse(id)).Comments;
             var comments = mapper.Map<CommentDTO[]>(comments_);
             return new JsonResult( new { comments });
         }

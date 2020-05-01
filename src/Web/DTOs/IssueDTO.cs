@@ -10,6 +10,7 @@ namespace Jineo.DTOs
         public ProjectDTO Project {get;set;}
         public string UserID { get; set; }
         public UserDTO User {get;set;}
+        public string Title { get; set; }
         public string Content { get; set; }
         public int StatusID { get; set; }
         public IEnumerable<CommentDTO> Comments {get;set;}
