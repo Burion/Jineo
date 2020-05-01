@@ -9,13 +9,14 @@
     <title>Document</title>
 </head>
 <body>
-    <p>
-    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    <a class="btn btn-primary" style="width: 100%;" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
           Add new issue
     </a>
-    </p>
     <div class="collapse" id="collapseExample">
         <div class="card card-body">
+        <label for="">Sensors</label>
+        <div id="issue-sensors">
+        </div>
         <label for="">Title</label>
         <input class="form-control" id="issuetitle" type="text" placeholder="Write title here">
         <label for="">Details</label>
@@ -31,6 +32,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
+    var issueSensors = []
     var projectId
     function addComment(issueId) {
             var _content = document.getElementById(issueId + '-input').value
@@ -153,7 +155,39 @@
         })
     } 
         
+    function deleteSensorFromIssue(id) {
+        for(var i = 0; i < issueSensors.length; i++) {
+            if(issueSensors[i].id == id){
+                issueSensors.splice(i, 1)
+            }
+        }
+        updateIssueSensors()
+    }
+    function addSensorToIssue(sensor) {
+        var id = sensor.id
+        var name = sensor.name
+        var isPresent = false
+        issueSensors.forEach(s => {
+            if(s.id == sensor.id){
+                isPresent = true
+            }
+        });
+        if(!isPresent){
+            issueSensors.push( { id: id, name: name })
+            updateIssueSensors()
+        }
+    }
 
+    function updateIssueSensors() {
+        r = ''
+        issueSensors.forEach(s => {
+            r += '<div class="container-flex">' 
+            r += '<div class="issue-sensor" onclick="selectSensor(' + s.id + ')">' + s.name + '</div>'
+            r += '<div class="" onclick="deleteSensorFromIssue(' + s.id + ')">X</div>'
+            r += '</div>'
+        });
+        document.getElementById('issue-sensors').innerHTML = r
+    }
 </script>
 
 </html>

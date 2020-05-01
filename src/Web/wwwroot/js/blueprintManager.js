@@ -1,5 +1,5 @@
 var canvas
-
+var mySensor = null
 var sensorsX 
 var sensorsY
 function initBlueprint(building, sensors) {
@@ -88,8 +88,6 @@ function initBlueprint(building, sensors) {
 }
 
 function selectSensor(sensorId) {
-    console.log(sensorId)
-    var sensor
     var obs = canvas.getObjects()
     obs.forEach( o => { if(o.id == sensorId) { sensor = o; return}})
     if(sensor.type == 'sensor') {
@@ -98,8 +96,12 @@ function selectSensor(sensorId) {
                 o.set('fill', 'rgba(0,0,0,0)')
             }
         });
+        mySensor = sensor
         sensor.set('fill', 'orange');
         canvas.renderAll();
         drawChart('myCanvas')
     }
 }
+
+
+

@@ -288,3 +288,22 @@ display: flex;
   border-radius: 50%;
   object-fit: cover;
 }
+
+.issue-sensor {
+  border: 1px solid gray;
+  border-radius: 15px;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+}
+
+.issue-sensor:hover {
+  border: 1px solid gray;
+  border-radius: 15px;
+  width: 100%;
+  background-color: rgb(75, 172, 204);
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;   
+}

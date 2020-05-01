@@ -124,8 +124,9 @@ function printSensors(sensors, canvas) {
         
         circle.type = 'sensor'
         circle.id = s.id
+        circle.name = s.name
         circle.selectable = false
-        canvas.add(circle).setActiveObject(circle)
+        canvas.add(circle)
     });
 }
 
