@@ -26,13 +26,18 @@ namespace Jineo.Data
             builder.Entity<Sensor>().HasData(
                 new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f }
             );
+
             builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
             builder.Entity<UserProject>().HasOne(up => up.Project).WithMany(p => p.UsersProjects).HasForeignKey(up => up.ProjectId);
+
+            builder.Entity<IssueSensor>().HasKey(ise => new { ise.IssueId, ise.SensorId });
+            builder.Entity<IssueSensor>().HasOne(ise => ise.Issue).WithMany(i => i.IssueSensors).HasForeignKey(ise => ise.IssueId);
+
             builder.Entity<Issue>().HasData(
-                new Issue() { Id = -1, ProjectId = -1, UserId = "1", Content = "That's bad"}
+                new Issue() { Id = -1, ProjectId = -1, UserId = "1", Title = "Alert!", Content = "That's bad"}
             );
             builder.Entity<Comment>().HasData(
-                new Comment(){ Id = -1, UserId = "1", Date = DateTime.Now, IssueId = -1, Text = "Hell ya!"}
+                new Comment(){ Id = -1, UserId = "1", Date = DateTime.Now, IssueId = -1, Text = "I am opened for your suggestions."}
             );
             builder.Entity<UserProject>().HasData(
                 new UserProject()

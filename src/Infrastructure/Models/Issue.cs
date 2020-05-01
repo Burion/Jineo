@@ -14,5 +14,6 @@ namespace Jineo.Models
         public string Title {get;set;}
         public int StatusID { get; set; }
         public IEnumerable<Comment> Comments {get;set;}
+        public IEnumerable<IssueSensor> IssueSensors {get;set;}
     }
 }
