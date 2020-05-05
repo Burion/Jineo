@@ -22,9 +22,11 @@ namespace Jineo.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            var data =  new[] { new { value = 45, date = DateTime.Now }, new { value = 55, date = DateTime.Now } };
 
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);   
             builder.Entity<Sensor>().HasData(
-                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f }
+                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f, Data = json }
             );
 
             builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
