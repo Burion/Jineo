@@ -1,8 +1,10 @@
 
-function drawChart(id){
-    var _data = []
-    for(var x = 0; x < 10; x++) {
-        _data.push(Math.random()*50)
+function drawChart(data){
+    var values = []
+    var dates = []
+    for(var x = 0; x < data.length; x++) {
+        values.push(data[x].value)
+        dates.push(data[x].date)
     }
     var ctx = document.getElementById('myChart').getContext('2d');
     ctx.clearRect(0, 0, document.getElementById('myChart').width, document.getElementById('myChart').height);
@@ -12,12 +14,12 @@ function drawChart(id){
             
             // The data for our dataset
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: dates,
                 datasets: [{
                     label: 'My First dataset',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: _data
+                data: values
             }]
         },
     

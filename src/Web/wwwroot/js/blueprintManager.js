@@ -99,7 +99,14 @@ function selectSensor(sensorId) {
         mySensor = sensor
         sensor.set('fill', 'orange');
         canvas.renderAll();
-        drawChart('myCanvas')
+        var datastring
+        sensors.forEach(s => {
+            if(s.id == sensorId){
+                datastring = s.data
+            }
+        });
+        var json = JSON.parse(datastring)
+        drawChart(json)
     }
 }
 
