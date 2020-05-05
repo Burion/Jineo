@@ -26,7 +26,7 @@ namespace Jineo.Data
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);   
             builder.Entity<Sensor>().HasData(
-                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f, Data = json }
+                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f, Data = json, UpperValue = 50f, LowerValue = 10f }
             );
 
             builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
