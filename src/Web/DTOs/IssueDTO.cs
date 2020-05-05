@@ -12,7 +12,8 @@ namespace Jineo.DTOs
         public UserDTO User {get;set;}
         public string Title { get; set; }
         public string Content { get; set; }
-        public int StatusID { get; set; }
+        public string Status { get; set; }
         public IEnumerable<CommentDTO> Comments {get;set;}
+        public IEnumerable<IssueSensorDTO> IssueSensors {get;set;}
     }
 }

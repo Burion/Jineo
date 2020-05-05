@@ -1,6 +1,8 @@
 
 @using Jineo.ViewModels
 @model PartialModel
+@using Jineo.Enums
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +54,10 @@
         }
 
     function addIssue() {
+        var issueSensorsIds = []
+        issueSensors.forEach(ise => {
+            issueSensorsIds.push(ise.id)
+        });
         var _title = document.getElementById('issuetitle').value
         var _content = document.getElementById('issuedetails').value
         $.ajax(
@@ -60,7 +66,8 @@
         data: {
             content: _content,
             projectid: projectId,
-            title: _title
+            title: _title,
+            sensorsIds: issueSensorsIds
         },
         url: '/addissue',
         success: function (response) {
@@ -90,7 +97,12 @@
                 r += '<div class="text">'
                 r += '<p>' + response.comments[k].text + '</p>'
                 r += '</div>'
-                r += '<p class="attribution">by <a href="#non">' + response.comments[k].user.email  + '</a> at ' + response.comments[k].date +'</p>'
+                var d = new Date(response.comments[k].date)
+                const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+                const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d)
+                const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+                
+                r += '<p class="attribution">by <a href="#non">' + response.comments[k].user.email  + '</a> at ' + d.getHours() + ':' + d.getMinutes() + ' ' + da + ' ' + mo + ' ' + ye + '</p>'
                 r += '</div>'
                 r += '</article>'
             }
@@ -116,12 +128,18 @@
                     r += '<div class="card-header" id="headingOne">'
                     r += '<h2 class="mb-0">'
                     r += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + i +'" aria-expanded="true" aria-controls="collapse' + i +'">'
+                    r += '[' + response.issues[i].status + '] '
                     r += response.issues[i].title
                     r += '</button>'
                     r += '</h2>'
                     r += '</div>'
                     r += '<div id="collapse' + i +'" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">'
                     r += '<div class="card-body">'
+                    response.issues[i].issueSensors.forEach(s => {
+                        r += '<div class="container-flex">' 
+                        r += '<div class="issue-sensor" onclick="selectSensor(' + s.sensorId + ')">' + s.sensor.name + '</div>'
+                        r += '</div>'
+                    });
                     r += '<p> ' + response.issues[i].content + ' </p>'
                     r += '<div class="comments">'
                     r += '<div id="issue-' + response.issues[i].id + '">'

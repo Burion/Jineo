@@ -71,6 +71,7 @@
 </body>
 
 <script>
+  var content 
   function addSensor() {
     var name = document.getElementById('sensorname').value
     $.ajax(
@@ -90,11 +91,47 @@
     )
   }
     window.onload = function() {
+
         loadProjectInfo('@Model.Project.Id')
         getUsersList('@Model.Project.Id')
         loadIssues('@Model.Project.Id')
+        $.ajax(
+        {
+        type: 'GET',
+        data: {
+            id: '-1'
+        },
+        url: '/getproject',
+        success: function (response) {
+            if(response.project.json == null){
+                content = generateBuilding(5,5,100,50)
+                var str = JSON.stringify(content)
+                $.ajax(
+                {
+                type: 'POST',
+                data: {
+                    json: str,
+                    id: '-1'
+                },
+                url: '/writeproject',
+                success: function (response) {
+                    content = JSON.parse(response.json)
+                    init()
+                }
+                }
+                )
+            }
+            else
+            {
+                content = JSON.parse(response.project.json)
+                //alert(response.project.json)
+                init() 
+            }
+        }
+        }
+        )
         var sensors = [];
-        init() 
+        
     }
 
     function init()

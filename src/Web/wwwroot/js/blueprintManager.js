@@ -77,8 +77,6 @@ function initBlueprint(building, sensors) {
     canvas.clear()
     canvas.selection = false
     printBuilding(building, canvas)
-    console.log('sensors lenght:')
-    console.log(sensors.length)
 
     printSensors(sensors, canvas)
     canvas.setBackgroundColor({source: imageUrl, repeat: 'repeat'}, function () {

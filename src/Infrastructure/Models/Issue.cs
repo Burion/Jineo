@@ -12,7 +12,7 @@ namespace Jineo.Models
         public JineoUser User {get;set;}
         public string Content { get; set; }
         public string Title {get;set;}
-        public int StatusID { get; set; }
+        public string Status { get; set; }
         public IEnumerable<Comment> Comments {get;set;}
         public IEnumerable<IssueSensor> IssueSensors {get;set;}
     }

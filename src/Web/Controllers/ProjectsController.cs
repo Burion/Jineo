@@ -66,6 +66,22 @@ namespace Jineo.Controllers
             return new JsonResult(new { projects });
         }
 
+        [Route("getproject")]
+        public async Task<IActionResult> GetProject(string id)
+        {
+            var project = ctx.Projects.Single(p => p.Id == int.Parse(id));
+            return new JsonResult(new { Project = project });
+        }
+
+        [Route("writeproject")]
+        public async Task<IActionResult> WriteProject(string id, string json)
+        {
+            var project = ctx.Projects.Single(p => p.Id == int.Parse(id));
+            project.Json = json;
+            ctx.SaveChanges();
+            return new JsonResult(new { Json = json });
+        }
+
         [Route("projectinfo")]
         public async Task<JsonResult> Projects(string id)
         {
@@ -77,8 +93,9 @@ namespace Jineo.Controllers
         [Route("issues")]
         public async Task<JsonResult> Issues (string id)
         {
-            var issues = ctx.Issues.Include(i => i.User).Include(i => i.Comments).Where(i => i.ProjectId == int.Parse(id));
+            var issues = ctx.Issues.Include(i => i.User).Include(i => i.Comments).Include(i => i.IssueSensors).ThenInclude(ise => ise.Sensor).Where(i => i.ProjectId == int.Parse(id));
             var issuesDTO = mapper.Map<IssueDTO[]>(issues);
+
             return new JsonResult(new { issues = issuesDTO });
         }
 
@@ -94,10 +111,21 @@ namespace Jineo.Controllers
 
         [Route("addissue")]
 
-        public IActionResult AddComment(string projectid, string content, string title)
+        public IActionResult AddIssue(string projectid, string content, string title, string[] sensorsIds)
         {
-            ctx.Issues.Add( new Issue() { ProjectId = int.Parse(projectid), Content = content, Title = title });
+            var issue = new Issue() { ProjectId = int.Parse(projectid), Content = content, Title = title };
+            ctx.Issues.Add(issue);
             ctx.SaveChanges();
+
+            List<IssueSensor> issueSensors = new List<IssueSensor>();
+            foreach(var id in sensorsIds) 
+            {
+                issueSensors.Add(new IssueSensor() { IssueId = issue.Id, SensorId = int.Parse(id)});
+            }
+            issue.IssueSensors = issueSensors;
+
+            ctx.SaveChanges();
+
             return new JsonResult(new {status = "it's ok"});
         }
 

@@ -34,7 +34,7 @@ namespace Jineo.Data
             builder.Entity<IssueSensor>().HasOne(ise => ise.Issue).WithMany(i => i.IssueSensors).HasForeignKey(ise => ise.IssueId);
 
             builder.Entity<Issue>().HasData(
-                new Issue() { Id = -1, ProjectId = -1, UserId = "1", Title = "Alert!", Content = "That's bad"}
+                new Issue() { Id = -1, ProjectId = -1, UserId = "1", Title = "Alert!", Content = "That's bad", Status = "OPENED" }
             );
             builder.Entity<Comment>().HasData(
                 new Comment(){ Id = -1, UserId = "1", Date = DateTime.Now, IssueId = -1, Text = "I am opened for your suggestions."}
