@@ -135,6 +135,9 @@
                     r += '</div>'
                     r += '<div id="collapse' + i +'" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">'
                     r += '<div class="card-body">'
+                    var status = "'FUCKED'"
+                    r += '<input id="f" type="radio" onclick="changeStatus('+ response.issues[i].id +', '+ status +')"/>'
+                    r += '<label for="f">Fucked<label/>'
                     response.issues[i].issueSensors.forEach(s => {
                         r += '<div class="container-flex">' 
                         r += '<div class="issue-sensor" onclick="selectSensor(' + s.sensorId + ')">' + s.sensor.name + '</div>'
@@ -172,7 +175,21 @@
             
         })
     } 
-        
+    function changeStatus(issueId, status) {
+        $.ajax(
+        {
+        type: 'POST',
+        data: {
+            issueId: issueId,
+            status: status
+        },
+        url: '/changestatus',
+        success: function (response) {
+            alert(response)
+        }
+        }
+        )
+    }        
     function deleteSensorFromIssue(id) {
         for(var i = 0; i < issueSensors.length; i++) {
             if(issueSensors[i].id == id){

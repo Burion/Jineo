@@ -137,9 +137,11 @@ namespace Jineo.Controllers
         }
 
         [Route("addsensor")]
-        public JsonResult AddSensor(string projectId, string x, string y, string name) 
+        public JsonResult AddSensor(string projectId, string x, string y, string name, string upperValue, string lowerValue) 
         {
-            ctx.Sensors.Add(new Sensor() { ProjectId = int.Parse(projectId), Name = name, X = float.Parse(x), Y = float.Parse(y) });
+            var json = new[] { new { value = 40, date = DateTime.Now }, new { value = 45, date = DateTime.Now } };
+            var _json = Newtonsoft.Json.JsonConvert.SerializeObject(json);
+            ctx.Sensors.Add(new Sensor() { ProjectId = int.Parse(projectId), Name = name, X = float.Parse(x), Y = float.Parse(y), UpperValue = int.Parse(upperValue), LowerValue = int.Parse(lowerValue), Data = _json });
             ctx.SaveChanges();
             return new JsonResult( new { Message = "Sensor was added" });
         }
@@ -150,6 +152,15 @@ namespace Jineo.Controllers
             var comments_ = ctx.Issues.Include(i => i.Comments).ThenInclude(c => c.User).Single(i => i.Id == int.Parse(id)).Comments;
             var comments = mapper.Map<CommentDTO[]>(comments_);
             return new JsonResult( new { comments });
+        }
+
+        [Route("changestatus")]
+        public JsonResult ChangeStatus(string issueId, string status)
+        {
+            var issue = ctx.Issues.Single(i => i.Id == int.Parse(issueId));
+            issue.Status = status;
+            ctx.SaveChanges();
+            return new JsonResult(status);
         }
     }
 

@@ -79,6 +79,7 @@ function initBlueprint(building, sensors) {
     printBuilding(building, canvas)
 
     printSensors(sensors, canvas)
+    dropSensorsColors()
     canvas.setBackgroundColor({source: imageUrl, repeat: 'repeat'}, function () {
         canvas.renderAll();
     });
@@ -87,25 +88,53 @@ function initBlueprint(building, sensors) {
 
 }
 
+function getSensorById(id) {
+    var sens
+    sensors.forEach(s => {
+        if(s.id == id){
+            sens = s
+        }
+    });
+    return sens
+}
+
+function dropSensorsColors() {
+var obs = canvas.getObjects()
+obs.forEach(o => {
+    if(o.type == 'sensor') {
+    var sen = getSensorById(o.id)
+    var _json = JSON.parse(sen.data)
+    var danger = false
+    if(_json[_json.length - 1].value > sen.upperValue) {
+        danger = true
+    }
+    if(danger) {
+        o.set('fill', 'rgba(255,0,0,1)')
+    }
+    else {
+        o.set('fill', 'rgba(0,0,0,0)')
+    }
+}
+})
+}
+
 function selectSensor(sensorId) {
     var obs = canvas.getObjects()
+    var _sensor 
+    var datastring
+    _sensor = getSensorById(sensorId)
+    datastring = _sensor.data
+    var json = JSON.parse(datastring)
+    
+
     obs.forEach( o => { if(o.id == sensorId) { sensor = o; return}})
     if(sensor.type == 'sensor') {
-        obs.forEach(o => {
-            if(o.type == 'sensor') {
-                o.set('fill', 'rgba(0,0,0,0)')
-            }
-        });
+        dropSensorsColors()
         mySensor = sensor
         sensor.set('fill', 'orange');
         canvas.renderAll();
-        var datastring
-        sensors.forEach(s => {
-            if(s.id == sensorId){
-                datastring = s.data
-            }
-        });
-        var json = JSON.parse(datastring)
+        
+        
         drawChart(json)
     }
 }
