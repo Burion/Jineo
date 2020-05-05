@@ -13,5 +13,7 @@ namespace Jineo.Models
 
         public float X { get; set; }
         public float Y { get; set; }
+
+        public string Data {get;set;}
     }
 }
