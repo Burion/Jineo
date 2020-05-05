@@ -60,6 +60,8 @@
         <div id="modal" class="modal-body">
           <label for="">Name of sensor:</label>
           <input id='sensorname' class="form-control" type="">
+          <input id='uppervalue' class="form-control" type="number">
+          <input id='lowervalue' class="form-control" type="number">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -74,6 +76,8 @@
   var content 
   function addSensor() {
     var name = document.getElementById('sensorname').value
+    var upperValue = document.getElementById('uppervalue').value
+    var lowerValue = document.getElementById('lowervalue').value
     $.ajax(
     {
     type: 'POST',
@@ -81,7 +85,9 @@
       projectId: '-1',
       name: name,
       x: sensorsX,
-      y: sensorsY
+      y: sensorsY,
+      upperValue: upperValue,
+      lowerValue: lowerValue
     },
     url: '/addsensor',
     success: function (response) {
