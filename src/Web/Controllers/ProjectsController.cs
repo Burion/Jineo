@@ -155,12 +155,13 @@ namespace Jineo.Controllers
         }
 
         [Route("changestatus")]
-        public JsonResult ChangeStatus(string issueId, string status)
+        public JsonResult ChangeStatus(string issueId)
         {
             var issue = ctx.Issues.Single(i => i.Id == int.Parse(issueId));
+            var status = issue.Status == "OPENED" ? "CLOSED" : "OPENED";
             issue.Status = status;
             ctx.SaveChanges();
-            return new JsonResult(status);
+            return new JsonResult(new { status, Id = issue.Id });
         }
     }
 
