@@ -22,14 +22,14 @@
             </div>
         </div>
         <div style="display: flex;">
-            <div class="card-shadow container-60">
-                <div class="card-header card-header-city">
+            <div class="card-shadow container-100">
+                <div class="card-header card-header-city container-100">
                     Info
                 </div>
-                <div class="card-body">
+                <div class="card-body container-100">
                     @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
-                    @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1 })
-                    @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1 })
+                    @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1, ReadOnly = true })
+                    @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1, ReadOnly = true })
                 </div>  
             </div>
             

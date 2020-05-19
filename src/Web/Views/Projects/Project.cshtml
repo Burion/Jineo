@@ -29,10 +29,10 @@
                 @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1 })
+                @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1, ReadOnly = false })
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1 })
+                @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1, ReadOnly = false })
             </div>
           </div>    
     </div>

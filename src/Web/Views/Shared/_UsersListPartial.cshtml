@@ -11,13 +11,38 @@
 <body>
     <div id="dataTable">
     </div>
-        
+    @if(@Model.ReadOnly == false)
+    {
+        <input type="text" name="" id="adduser" placeholder="Enter user email">
+        <button onclick="addUser(@Model.Id)">Add user</button>
+        <div>
+            <label id="message"></label>
+        </div>
+    }
 </body>
 
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
 <script>
+    function addUser(projectId) {
+        var email = $('#adduser').val()
+        console.log(email)
+        $.ajax(
+        {
+        type: 'POST',
+        data: {
+            email: email,
+            projectId: projectId
+        },
+        url: '/addusertoproject',
+        success: function (response) {
+            getUsersList(@Model.Id)
+            $("#message").html(response.message)
+        }
+        }
+        )
+    }
     function getUsersList(_id){
         $.ajax(
             {

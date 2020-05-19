@@ -163,6 +163,28 @@ namespace Jineo.Controllers
             ctx.SaveChanges();
             return new JsonResult(new { status, Id = issue.Id });
         }
+
+        [Route("addusertoproject")]
+        public async Task<ActionResult> AddUserToProject(string email, string projectId)
+        {
+            var user = await um.FindByEmailAsync(email);
+            if(user == null)
+                return new JsonResult(new { success = false, message = "User is not found. Check email again." }); 
+            var record = new UserProject() { JineoUserId = user.Id, ProjectId = int.Parse(projectId)};
+            var list = ctx.UsersProjects.Where(up => up.ProjectId == record.ProjectId && up.JineoUserId == record.JineoUserId).Count();
+
+            if(list == 0)
+            {
+                ctx.UsersProjects.Add(record);
+                await ctx.SaveChangesAsync();
+            }
+            else
+            {
+                return new JsonResult(new { success = false, message = "Project already contains this user" }); 
+            }
+            
+            return new JsonResult(new { success = true, record = new { email = email }, message = "User is added" }); 
+        }
     }
 
 }
