@@ -25,6 +25,23 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
 <script>
+
+    function deleteUser(email) {
+        $.ajax(
+        {
+        type: 'POST',
+        data: {
+            projectId: @Model.Id,
+            email: email
+        },
+        url: '/deleteuserfromproject',
+        success: function (response) {
+            getUsersList(@Model.Id)
+            $("#message").html(response.message)
+        }
+        }
+        )
+    }
     function addUser(projectId) {
         var email = $('#adduser').val()
         console.log(email)
@@ -69,7 +86,7 @@
                 r.push(response.users[key].email)
                 r.push('</div>')
                 r.push('<div class="divider-vertical"></div>')
-                r.push('<div class="user-list-element">')
+                r.push('<div class="user-list-element" onclick="deleteUser(\'' + response.users[key].email + '\')">')
                 r.push('✖')  
                 r.push('</div>')
                 r.push('</div>')

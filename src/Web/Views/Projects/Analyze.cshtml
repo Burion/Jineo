@@ -1,0 +1,248 @@
+@using Jineo.ViewModels
+@model AnalyzeDataModel
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script src="./js/three.js"></script>
+<script src="./js/manager.js"></script>
+</head>
+  <div style="display: flex; flex-direction: row;">
+    <div">
+      <canvas width="1000px" height="500px" id='c'></canvas>
+    </div>
+    <div>
+      <table style="border: 1px solid black;">
+        <thead>
+          <tr>
+            <td>
+              Property
+            </td>
+            <td>
+              Value
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Block type
+            </td>
+            <td>
+              Grained
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script>
+var scene = new THREE.Scene();
+const canvas = document.getElementById('c');
+var camera = new THREE.PerspectiveCamera(60, canvas.width / canvas.height, 1, 1000);
+camera.position.setScalar(20);
+var renderer = new THREE.WebGLRenderer({canvas});
+renderer.setSize(canvas.width, canvas.height);
+renderer.setClearColor( 0xD8D8D8, 1)
+document.body.appendChild(renderer.domElement);
+
+var controls = new THREE.OrbitControls(camera, renderer.domElement);
+cells = []
+
+// for(var i = 0; i < 10; i++)
+// {
+//   for(var j = 0; j < 10; j++)
+//   {
+//     cells.push( { x: 20*i, y: 20*j, floorsCount: Math.random()*10, celltype: i % 3 + 1 })
+//   }
+// }
+var str = '@Html.Raw(Model.Json)';
+console.log(str)
+cells = JSON.parse(str)
+function init(cells) {
+  
+var json = JSON.stringify(cells)
+console.log(json)
+
+var planeGeom = new THREE.PlaneBufferGeometry(20, 20, 20, 20);
+var planeGeom1 = new THREE.PlaneBufferGeometry(20, 20, 20, 20);
+
+// bending along Y-axis
+// var axis = new THREE.Vector3(0, 1, 0);
+// var axisPosition = new THREE.Vector3(-10, 0, 10);
+// var positions = planeGeom.attributes.position;
+// var vTemp = new THREE.Vector3();
+// for (let i = 0; i < positions.count; i++){
+// 	vTemp.fromBufferAttribute(positions, i);
+// 	let lengthOfArc = vTemp.x - axisPosition.x;
+//   let angleOfArc = lengthOfArc / axisPosition.z;
+//   vTemp.setX(0).setZ(-axisPosition.z).applyAxisAngle(axis, -angleOfArc).add(axisPosition);
+//   positions.setXYZ(i, vTemp.x, vTemp.y, vTemp.z);
+// }
+
+// var plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({color: 0xffffff , wireframe: false, opacity: 0.5, transparent: true}));
+// var plane1 = new THREE.Mesh(planeGeom1, new THREE.MeshBasicMaterial({color: 0xffffff , wireframe: false, opacity: 0.5, transparent: true}));
+// scene.add(plane);
+// scene.add(plane1);
+// plane1.position.set(20, 0, 0)
+var planets = []
+
+console.log(scene.children)
+renderer.domElement.addEventListener("click", onclick, true);
+var selectedObject;
+var raycaster = new THREE.Raycaster();
+ // function onclick(event) {
+var mouse = new THREE.Vector2();
+raycaster.setFromCamera(mouse, camera);
+var intersects = raycaster.intersectObjects(scene.children, true); //array
+if (intersects.length > 0) {
+    selectedObject = intersects[0];
+    alert(selectedObject);
+}
+var cls = []
+document.addEventListener('mousedown', onMouseDown, false);
+
+function onMouseDown(e) {
+  const pos = getCanvasRelativePosition(event);
+  var ph = new PickHelper()
+
+  pickPosition.x = (pos.x / canvas.width ) *  2 - 1;
+  pickPosition.y = (pos.y / canvas.height) * -2 + 1;  // note we flip Y
+  ph.pick(pickPosition, scene, camera, null)
+}
+
+const pickPosition = {x: 0, y: 0};
+clearPickPosition();
+ 
+function getCanvasRelativePosition(event) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (event.clientX - rect.left) * canvas.width  / rect.width,
+    y: (event.clientY - rect.top ) * canvas.height / rect.height,
+  };
+}
+ 
+function setPickPosition(event) {
+  const pos = getCanvasRelativePosition(event);
+  var ph = new PickHelper()
+
+  pickPosition.x = (pos.x / canvas.width ) *  2 - 1;
+  pickPosition.y = (pos.y / canvas.height) * -2 + 1;  // note we flip Y
+  ph.pick(pickPosition, scene, camera, null)
+}
+ 
+function clearPickPosition() {
+  // unlike the mouse which always has a position
+  // if the user stops touching the screen we want
+  // to stop picking. For now we just pick a value
+  // unlikely to pick something
+  pickPosition.x = -100000;
+  pickPosition.y = -100000;
+}
+ 
+//window.addEventListener('mousemove', setPickPosition);
+window.addEventListener('mouseout', clearPickPosition);
+window.addEventListener('mouseleave', clearPickPosition);
+
+class PickHelper {
+  constructor() {
+    this.raycaster = new THREE.Raycaster();
+    this.pickedObject = null;
+    this.pickedObjectSavedColor = 0;
+  }
+  pick(normalizedPosition, scene, camera, time) {
+    // restore the color if there is a picked object
+    if (this.pickedObject) {
+      this.pickedObject.material.emissive.setHex(this.pickedObjectSavedColor);
+      this.pickedObject = undefined;
+    }
+ 
+    // cast a ray through the frustum
+    this.raycaster.setFromCamera(normalizedPosition, camera);
+    // get the list of objects the ray intersected
+    const intersectedObjects = this.raycaster.intersectObjects(scene.children);
+    console.log(intersectedObjects[0].object.material.emissive)
+    intersectedObjects[0].object.material.color.setHex((time * 8) % 2 > 1 ? 0xFFFF00 : 0xFF0000)
+
+    //   this.pickedObject = intersectedObjects[0].object;
+    //   // save its color
+    //   this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
+    //   // set its emissive color to flashing red/yellow
+    //   this.pickedObject.material.emissive.setHex((time * 8) % 2 > 1 ? 0xFFFF00 : 0xFF0000);
+
+  }
+} 
+
+
+for(var i = 0; i < cells.length; i++) 
+{
+  cells[i].x = cells[i].x*20
+  cells[i].y = cells[i].y*20
+  var planeGeom = new THREE.PlaneBufferGeometry(20, 20, 20, 20);
+  var color = ((cells[i].x / 20) + (cells[i].y / 20)) % 2 == 0 ? 0x32CD32 : 0x00FF00
+  
+  if(cells[i].celltype == 2)
+  {
+    color = 0x0000FF
+  //   if(Math.random() > 0.95)
+  //   {
+
+  //     var rampUp = new THREE.Mesh(new THREE.BoxGeometry(5,8,2), new THREE.MeshBasicMaterial({ color: 0x686868}))
+  //     scene.add(rampUp)
+  //     rampUp.position.set(cells[i].x, cells[i].y - 7, 3)
+  //     rampUp.rotation.set(0.5, 0, 0)
+      
+  //     var rampDown = new THREE.Mesh(new THREE.BoxGeometry(5,8,2), new THREE.MeshBasicMaterial({ color: 0x686868}))
+  //     scene.add(rampDown)
+  //     rampDown.position.set(cells[i].x, cells[i].y + 7, 3)
+  //     rampDown.rotation.set(-0.5, 0, 0)
+      
+  //     var plank = new THREE.Mesh(new THREE.BoxGeometry(5,8,2), new THREE.MeshBasicMaterial({ color: 0x686868}))
+  //     scene.add(plank)
+  //     plank.position.set(cells[i].x, cells[i].y, 5)
+  //     plank.rotation.set(0, 0, 0)
+  // }
+    
+  }
+    
+  var plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({color: color , wireframe: false, opacity: 0.5, transparent: true}));
+  scene.add(plane);
+
+  plane.position.set(cells[i].x, cells[i].y, 0)
+  
+  
+  if(cells[i].celltype == 3){
+    var cone = new THREE.Mesh(new THREE.ConeGeometry( 14, 8, 4 ), new THREE.MeshBasicMaterial( {color: 0x686868} ))
+    scene.add(cone);
+    cone.position.set(cells[i].x, cells[i].y, 4)
+    cone.rotation.set(1.5,0.78,0)
+  }
+
+  // var cube = new THREE.Mesh(new THREE.BoxGeometry(20,20,20*cells[i].floorsCount), new THREE.MeshBasicMaterial({ color: color }))
+  // scene.add(cube)
+  // cube.position.set(cells[i].x, cells[i].y, 10*cells[i].floorsCount)
+  
+  // var geometry = new THREE.BoxGeometry( 18, 18, 18 * i);
+  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  // var cube = new THREE.Mesh( geometry, material );
+  // scene.add(cube);
+  // cube.position.set(i, j)
+  // var planeGeom = new THREE.PlaneBufferGeometry(20, 20, 20, 20);
+  // var plane = new THREE.Mesh(planeGeom, new THREE.MeshBasicMaterial({color: 0xffffff , wireframe: false, opacity: 0.5, transparent: true}));
+  // scene.add(plane)
+
+}
+
+render();
+}
+init(cells)
+
+function render(){
+	requestAnimationFrame(render);
+  renderer.render(scene, camera);
+}
+</script>

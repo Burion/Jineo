@@ -12,6 +12,11 @@ using Jineo.Data;
 using Jineo.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Jineo.Logic;
+using Jineo.ViewModels;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Text;
 
 namespace Jineo.Controllers
 {
@@ -35,7 +40,7 @@ namespace Jineo.Controllers
         //     model.Message = ctx.Projects.Count().ToString();
         //     var user = um.FindByEmailAsync(User.Identity.Name).Result;
         //     Console.WriteLine($"USER ROLES: {um.GetRolesAsync(user).Result.First()}");
-        //     Console.WriteLine(User.IsInRole("SuperAdmin"));
+        //     Console.WriteLine(User.IsInRole("SuperU"));
         //     return View(model);
         // }
         [Route("projectusers")]
@@ -61,9 +66,15 @@ namespace Jineo.Controllers
         [Route("projects")]
         public async Task<JsonResult> Projects()
         {
-            var _projects = ctx.Projects;
+            var user = await um.FindByEmailAsync(User.Identity.Name);
+            var _projects = ctx.UsersProjects.Where(pu => pu.User.Id == user.Id).Select(pu => pu.Project);
             var projects = mapper.Map<ProjectDTO[]>(_projects);
             return new JsonResult(new { projects });
+        }
+
+        public async Task<IActionResult> ProjectsPage() 
+        {
+            return View();
         }
 
         [Route("getproject")]
@@ -162,6 +173,63 @@ namespace Jineo.Controllers
             issue.Status = status;
             ctx.SaveChanges();
             return new JsonResult(new { status, Id = issue.Id });
+        }
+
+        [Route("deleteuserfromproject")]
+        public async Task<IActionResult> DeleteUserFromProject(string email, string projectId)
+        {
+            var user = await um.FindByEmailAsync(email);
+            var userProject = ctx.UsersProjects.Single(up => up.JineoUserId == user.Id && up.ProjectId == int.Parse(projectId));
+            ctx.UsersProjects.Remove(userProject);
+            await ctx.SaveChangesAsync();
+            return new JsonResult(new { success = true, message = "User was deleted from project "}); 
+        }
+
+        [Route("analyze")]
+        public async Task<IActionResult> Analyze(string _json)
+        {
+            // Random r = new Random();
+            // List<DataBlock> blocks = new List<DataBlock>();
+            // for(int x = 0; x < 10; x++) 
+            // {
+            //     for(int y = 0; y < 10; y++)
+            //     {
+            //         var dencity = (float)r.Next(13, 22) / 10;
+            //         var pressure = (float)r.Next(9, 30) / 10;
+            //         var waterproof = (float)r.Next(1, 100) / 100;
+            //         var dict = new Dictionary<int, float>();
+            //         dict.Add((int)MeteringType.Density, dencity);
+            //         dict.Add((int)MeteringType.Pressure, pressure);
+            //         dict.Add((int)MeteringType.Waterproof, waterproof);
+            //         blocks.Add(new DataBlock() { Data = dict, X = x, Y = y });
+            //     }
+            // }
+            // var cells = DataAnalizer.AnalizeData(blocks, 4);
+            //var json = Newtonsoft.Json.JsonConvert.SerializeObject(cells);
+            var blocks = Newtonsoft.Json.JsonConvert.DeserializeObject<DataBlock[]>(_json).ToList();
+            var cells = DataAnalizer.AnalizeData(blocks, 4);
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(cells);
+            Console.WriteLine(json);
+            ViewBag.Json = json;
+            return View("Analyze", new AnalyzeDataModel() { Json = json.ToString() });
+        }
+        [HttpGet]
+        public async Task<IActionResult> UploadAnalyzeFile()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadAnalyzeFile(IFormFile file)
+        {
+            var result = new StringBuilder();
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                while (reader.Peek() >= 0)
+                    result.AppendLine(reader.ReadLine()); 
+            }
+            Console.WriteLine(result);
+            return await Analyze(result.ToString());
         }
 
         [Route("addusertoproject")]
