@@ -9,6 +9,11 @@
     <title>Document</title>
 </head>
 <body>
+    <label for="" id="messge"></label>
+    
+    <div id="addproject">
+
+    </div>
     <div class="" id="projectslist">
 
     </div>
@@ -27,9 +32,18 @@
             url: '/projects',
             success: function (response) {
                 r = ""
-                for(var x = 0; x < response.projects.length; x++)
+                var addpr = ""
+                if(response.max <= response.projects.length)
                 {
-                    console.log(response.projects.length)
+                    addpr = "<a href='/Users/Subscriptions'>Change subscription</a> to have more projects."
+                }
+                else
+                {
+                    addpr = '<a href="/Projects/NewProject">Add new project</a>'
+                }
+                $('#addproject').html(addpr)
+                for(var x = 0; x < response.projects.length; x++)
+                {     
                     r += '<div class="projects-list-line" onclick="getUsersList(' + response.projects[x].id + '); loadProjectInfo(' + response.projects[x].id + ')">'
                     r += '<div class="projects-list-indicator"></div>'
                     r += '<div class="project-list-element">'

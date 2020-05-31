@@ -27,15 +27,15 @@
             success: function (response) {
                 r = ""
                 r += '<div class="container-flex container-center">'
-                r += '<img class="main-image" src="https://images.adsttc.com/media/images/5e66/5dc0/b357/65bd/db00/0024/newsletter/10.jpg?1583766967" alt="" width="200">'
+                r += '<img class="main-image" src="' + response.project.image + '" alt="" width="200">'
                 r += '<div class="geninfo">'
                 r += '<div class="geninfo-name-status">'
                 r += '<h1 class="geninfo-name">' + response.project.name + '</h1>'
                 r += '<h2 class="alert-sign"></h2>'
                 r += '</div>'
-                r += '<label for="">office building</label>'
+                r += '<label for="">' + response.project.type + '</label>'
                 r += '<p class="geninfo-description">'
-                r += 'al;ksdfkasdjf ;lkasdmf;lk jad;lkf a;lkdfj l;adskfj ;lkadsjf l;kasjdf kadjfl;k aj;lfkjas;ldk'
+                r += response.project.description
                 r += '</p>'
                 r += '</div>'
                 r += '</div>'

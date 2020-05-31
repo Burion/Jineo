@@ -32,6 +32,11 @@ namespace Jineo.Controllers
             return View();
         }
 
+        public IActionResult Banned()
+        {
+            return View();
+        }
+
         [Authorize]
         public IActionResult Privacy()
         {

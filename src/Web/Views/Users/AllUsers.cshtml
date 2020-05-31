@@ -1,0 +1,139 @@
+@using Jineo.ViewModels
+@model AllUsersModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    UserName
+                </td>
+                <td>
+                    Role setting
+                </td>
+                <td>
+                    Ban Button
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var user in Model.Users)
+            {
+               <tr>
+                   <td>
+                       @user.Email
+                   </td>
+                   <td>
+                       @user.UserName
+                   </td>
+                   <td>
+                       <select class="form-control" id="@user.Email" onchange="changeSub('@user.Email')" name="" id="">
+                        @if(@user.SubscriptionId == 0)
+                        {
+                            <option selected="selected" value="0">
+                                Basic
+                            </option>
+                        } 
+                        else
+                        {
+                            <option value="0">
+                                Basic
+                            </option>
+                        }
+                        @if(@user.SubscriptionId == 1)
+                        {
+                            <option selected="selected" value="1">
+                                Silver
+                            </option>
+                        } 
+                        else
+                        {
+                            <option value="1">
+                                Silver
+                            </option>
+                        }
+                        @if(@user.SubscriptionId == 2)
+                        {
+                            <option selected="selected" value="2">
+                                Golden
+                            </option>
+                        } 
+                        else
+                        {
+                            <option value="2">
+                                Golden
+                            </option>
+                        }
+                       </select>
+                   </td>
+                   <td id="ban-@user.Email">
+                       @if(user.IsBanned)
+                       {
+                           <button onclick="ban('@user.Email')" class="btn btn-danger">
+                               Unban
+                           </button>
+                           
+                       }
+                       else
+                       {
+                            <button onclick="ban('@user.Email')" class="btn btn-outline-danger">
+                                Ban
+                            </button>
+                       }
+                   </td>
+               </tr> 
+            }
+        </tbody>
+    </table>
+</body>
+<script>
+
+    function ban(email)
+    {
+        $.ajax(
+        {
+        type: 'POST',
+        data: {
+            email: email
+        },
+        url: '/ban',
+        success: function (response) {
+            var banned = response.banned
+            var str = ""
+            if(!banned) 
+                str = "<button onclick=\"ban(\'" + response.email + "\')\" class='btn btn-outline-danger'>Ban</button>"
+            else
+                str = "<button onclick=\"ban(\'" + response.email + "\')\" class='btn btn-danger'>Unban</button>"
+
+            document.getElementById('ban-' + response.email).innerHTML = str
+        }
+        }
+        )
+    }
+
+    function changeSub(email)
+    {
+    $.ajax(
+    {
+    type: 'GET',
+    data: {
+        email: email,
+        subId: document.getElementById(email).value
+    },
+    url: '/changesub',
+    success: function (response) {
+    }
+    }
+    )
+}
+</script>
+</html>

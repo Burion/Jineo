@@ -307,3 +307,60 @@ display: flex;
   overflow: hidden;
   cursor: pointer;   
 }
+
+.img-fit {
+  width: 100%;
+  object-fit: cover;
+}
+
+.item-image {
+  display: inline-block;
+  width: 230px;
+  height: 230px;
+  background-position: center center;
+  background-size: cover;
+}
+
+.profile-image {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-position: center center;
+  background-size: cover;
+}
+
+.item-image-main {
+  display: inline-block;
+  width: 400px;
+  height: 400px;
+  background-position: center center;
+  background-size: cover;
+}
+
+.thumb-company {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-position: center center;
+  background-size: cover;
+}
+
+.hideOverflow
+{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  width:100%;
+  display:block;
+}
+
+.item-store {
+  --box-shadow-color: rgba(160, 160, 160, 0.5);
+  box-shadow: 0px 0px 15px var(--box-shadow-color);
+}
+
+.item-store:hover {
+  
+  --box-shadow-color: rgba(62, 234, 247, 0.5); ;
+  cursor: pointer;
+}

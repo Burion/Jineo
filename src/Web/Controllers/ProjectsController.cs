@@ -17,6 +17,7 @@ using Jineo.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Jineo.Controllers
 {
@@ -25,12 +26,14 @@ namespace Jineo.Controllers
         readonly IMapper mapper;
         readonly ApplicationDbContext ctx;
         readonly UserManager<JineoUser> um;
-        public ProjectsController(IMapper _mapper, ApplicationDbContext _ctx, UserManager<JineoUser> um)
+        IWebHostEnvironment _env;
+        public ProjectsController(IMapper _mapper, ApplicationDbContext _ctx, UserManager<JineoUser> um, IWebHostEnvironment appEnvironment)
         {
             mapper = _mapper;
             ctx = _ctx;
             ctx.Database.EnsureCreated();
             this.um = um;
+            _env = appEnvironment;
         }
     
         // public IActionResult Projects()
@@ -61,6 +64,29 @@ namespace Jineo.Controllers
             model.Project = projectDTO;
             return View(model);
         }
+        [HttpGet]
+        public async Task<IActionResult> NewProject()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NewProject(string name, string desc, string type, IFormFile file)
+        {
+            var user = await um.FindByEmailAsync(User.Identity.Name);
+            var project = new Project() { Name = name, Description = desc, Type = type };
+            string path = "/img/" + file.FileName;
+            using (var fileStream = new FileStream(_env.WebRootPath + path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            project.Image = path;
+            ctx.Projects.Add(project);
+            ctx.SaveChanges();
+            ctx.UsersProjects.Add(new UserProject() { JineoUserId = user.Id, ProjectId = project.Id });
+            ctx.SaveChanges();
+            return RedirectToAction("ProjectsPage");
+        }
 
 
         [Route("projects")]
@@ -69,7 +95,7 @@ namespace Jineo.Controllers
             var user = await um.FindByEmailAsync(User.Identity.Name);
             var _projects = ctx.UsersProjects.Where(pu => pu.User.Id == user.Id).Select(pu => pu.Project);
             var projects = mapper.Map<ProjectDTO[]>(_projects);
-            return new JsonResult(new { projects });
+            return new JsonResult(new { projects, max = 3 + user.SubscriptionId*2 });
         }
 
         public async Task<IActionResult> ProjectsPage() 
@@ -238,6 +264,8 @@ namespace Jineo.Controllers
             var user = await um.FindByEmailAsync(email);
             if(user == null)
                 return new JsonResult(new { success = false, message = "User is not found. Check email again." }); 
+            if(user.SubscriptionId*2 + 3 <= ctx.UsersProjects.Where(up => up.JineoUserId == user.Id).Count())
+                return new JsonResult(new { success = false, message = "The limit of maximum projects is reached by this user." }); 
             var record = new UserProject() { JineoUserId = user.Id, ProjectId = int.Parse(projectId)};
             var list = ctx.UsersProjects.Where(up => up.ProjectId == record.ProjectId && up.JineoUserId == record.JineoUserId).Count();
 

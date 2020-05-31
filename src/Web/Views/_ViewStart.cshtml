@@ -2,6 +2,11 @@
     @using Jineo.Extentions
     if(this.User.Identity.IsAuthenticated)
     {
+        if(this.User.IsInRole("Banned"))
+        {
+            Layout = "/Views/Shared/_BannedLayout.cshtml";
+        }
+        else
         if(this.User.IsInRole("SuperAdmin"))
         {
             Layout = "/Views/Shared/_LayoutSuperAdmin.cshtml";

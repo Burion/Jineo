@@ -43,7 +43,51 @@ namespace Jineo.Controllers
             await userManager.AddToRoleAsync(user, role);
             return RedirectToAction("UsersSuperAdmin");
         }
+        public async Task<IActionResult> ChangeSub(string subId)
+        {
+            var user = await userManager.FindByEmailAsync(User.Identity.Name);
+            user.SubscriptionId = int.Parse(subId);
+            await userManager.UpdateAsync(user);
+            return RedirectToAction("Subscriptions");
+        }
 
+        [Route("/changesub")]
+        public async Task<IActionResult> ChangeSub(string email, string subId)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            user.SubscriptionId = int.Parse(subId);
+            await userManager.UpdateAsync(user);
+            return new JsonResult(new { status = "OK"} );
+        }
+
+        [Route("/ban")]
+        public async Task<IActionResult> Ban(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            user.IsBanned = !user.IsBanned;
+            var res = await userManager.UpdateAsync(user);
+            if(user.IsBanned)
+                await userManager.AddToRoleAsync(user, "Banned");
+            else
+                await userManager.RemoveFromRoleAsync(user, "Banned");
+
+            return new JsonResult(new { banned = user.IsBanned, email = user.Email });
+        }
+
+        public async Task<IActionResult> AllUsers()
+        {
+            AllUsersModel model = new AllUsersModel();
+            var users = ctx.Users.ToArray();
+            model.Users = mapper.Map<UserDTO[]>(users);
+            return View(model);
+        }
+
+        public async Task<IActionResult> Subscriptions()
+        {
+            var user = await userManager.FindByEmailAsync(User.Identity.Name);
+            ViewBag.SubId = user.SubscriptionId;
+            return View();
+        }
         public async Task<IActionResult> Users()
         {
             UsersPageViewModel model = new UsersPageViewModel();
