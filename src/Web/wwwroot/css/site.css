@@ -364,3 +364,15 @@ display: flex;
   --box-shadow-color: rgba(62, 234, 247, 0.5); ;
   cursor: pointer;
 }
+
+.silvercup {
+  background-image: url('../img/silver.png');
+}
+
+.bronzecup {
+  background-image: url('../img/bronze.png');
+}
+
+.goldencup {
+  background-image: url('../img/golden.png');
+}

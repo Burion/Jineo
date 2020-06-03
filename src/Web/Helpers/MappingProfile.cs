@@ -29,6 +29,10 @@ namespace Jineo.Helpers
             CreateMap<Sensor, SensorDTO>();
             CreateMap<IssueSensor, IssueSensorDTO>();
 
+            //Products
+            CreateMap<Product, ProductDTO>();
+            CreateMap<ProductLink, ProductLinkDTO>();
+
 
             
         }

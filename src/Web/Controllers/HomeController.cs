@@ -11,6 +11,7 @@ using Jineo.ViewModels;
 using Jineo.Data;
 using AutoMapper;
 using Jineo.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Jineo.Controllers
 {
@@ -32,6 +33,27 @@ namespace Jineo.Controllers
             return View();
         }
 
+        [Route("home/store/{id}")]
+        public IActionResult ItemPage(string id)
+        {
+            var product = ctx.Products.Include(p => p.Links).Single(p => p.Id == int.Parse(id));
+            var productDTO = mapper.Map<ProductDTO>(product);
+            return View(productDTO);
+        }
+        public IActionResult Store()
+        {
+            var items = ctx.Products.Include(p => p.Links).ToArray();
+            var itemsDTO = mapper.Map<ProductDTO[]>(items);
+            for(int x = 0; x < itemsDTO.Length; x++)
+            {
+                if(ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Count() > 0)
+                {    
+                    itemsDTO[x].AvgPrice = ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Average(pl => pl.Price);
+                }
+            }
+            var model = new StoreModel() { Products = itemsDTO };
+            return View(model);
+        }
         public IActionResult Banned()
         {
             return View();

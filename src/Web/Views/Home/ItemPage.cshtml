@@ -1,0 +1,112 @@
+@model Jineo.DTOs.ProductDTO
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./bootstrap/fonts/fonts-glyphicons.css">
+    <link rel="stylesheet" href="./bootstrap/dist/site.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-5">
+                <div class="item-image-main rounded m-3" style="background-image: url(https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg);">
+
+                </div>
+            </div>
+            <div class="col-3 m-3">
+                <h1>@Model.Name</h1>
+                <label>@Model.ProductTypeId</label>
+                <div class="d-flex mb-3">
+                    <i class="glyphicon glyphicon-star"></i>
+                    <i class="glyphicon glyphicon-star"></i>
+                    <i class="glyphicon glyphicon-star"></i>
+                    <i class="glyphicon glyphicon-star"></i>
+                    <i class="glyphicon glyphicon-star"></i>
+                </div>
+                <div class="d-flex justify-content-start">
+                    <i class="glyphicon-euro glyphicon"></i>
+                    <h3>~@Model.AvgPrice</h3>
+                </div>
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        @foreach(var link in Model.Links)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex">
+                                        @{ string image = link.Store + ".png"; }
+                                        <div class="thumb-company" style="background-image: url(/img/@image);"></div>
+                                        <p>
+                                            @link.Store
+                                        </p>
+                                    </div>
+                                </td>
+                                <td>
+                                    @link.Price $
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="m-3">
+            <label for="">Leave your review here:</label>
+            <textarea class="form-control" type="text">
+            </textarea>
+            <button class="btn btn-primary mt-2">Leave</button>
+        </div>
+        <div class="card m-3">
+            <div class="card-header card-header">
+
+                <div class="d-flex justify-content-sm-between">
+                    <div class="d-inline-flex align-items-center">
+                        <div class="profile-image rounded-circle m-2" style="background-image: url(https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png);">
+                        </div>
+                        <p class="m-0">Andrew X</p>
+                    </div>
+                    <div class="d-flex m-3">
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                    </div>
+                </div>
+            </div>
+            <p class="m-3">
+                Есть много вариантов Lorem Ipsum, но большинство из них имеет не всегда приемлемые модификации, например, юмористические вставки или слова, которые даже отдалённо не напоминают латынь. Если вам нужен Lorem Ipsum для серьёзного проекта, вы наверняка не хотите какой-нибудь шутки, скрытой в середине абзаца. Также все другие известные генераторы Lorem Ipsum используют один и тот же текст, который они просто повторяют, пока не достигнут нужный объём. Это делает предлагаемый здесь генератор единственным настоящим Lorem Ipsum генератором. Он использует словарь из более чем 200 латинских слов, а также набор моделей предложений. В результате сгенерированный Lorem Ipsum выглядит правдоподобно, не имеет повторяющихся абзацей или "невозможных" слов.
+            </p>    
+            
+        </div>
+        <div class="card m-3">
+            <div class="card-header card-header">
+
+                <div class="d-flex justify-content-sm-between">
+                    <div class="d-inline-flex align-items-center">
+                        <div class="profile-image rounded-circle m-2" style="background-image: url(https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png);">
+                        </div>
+                        <p class="m-0">Andrew X</p>
+                    </div>
+                    <div class="d-flex m-3">
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                        <i class="glyphicon glyphicon-star"></i>
+                    </div>
+                </div>
+            </div>
+            <p class="m-3">
+                Есть много вариантов Lorem Ipsum, но большинство из них имеет не всегда приемлемые модификации, например, юмористические вставки или слова, которые даже отдалённо не напоминают латынь. Если вам нужен Lorem Ipsum для серьёзного проекта, вы наверняка не хотите какой-нибудь шутки, скрытой в середине абзаца. Также все другие известные генераторы Lorem Ipsum используют один и тот же текст, который они просто повторяют, пока не достигнут нужный объём. Это делает предлагаемый здесь генератор единственным настоящим Lorem Ipsum генератором. Он использует словарь из более чем 200 латинских слов, а также набор моделей предложений. В результате сгенерированный Lorem Ipsum выглядит правдоподобно, не имеет повторяющихся абзацей или "невозможных" слов.
+            </p>    
+            
+        </div>
+    </div>
+</body>
+</html>

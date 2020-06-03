@@ -14,6 +14,8 @@ namespace Jineo.Data
         public DbSet<Comment> Comments {get;set;}
         public DbSet<UserProject> UsersProjects {get;set;} 
         public DbSet<Sensor> Sensors { get;set;} 
+        public DbSet<Product> Products {get;set;}
+        public DbSet<ProductLink> ProductLinks {get;set;}
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -35,6 +37,17 @@ namespace Jineo.Data
 
             builder.Entity<IssueSensor>().HasKey(ise => new { ise.IssueId, ise.SensorId });
             builder.Entity<IssueSensor>().HasOne(ise => ise.Issue).WithMany(i => i.IssueSensors).HasForeignKey(ise => ise.IssueId);
+
+
+            builder.Entity<Product>().HasData(
+                new Product() { Id = -1, Name = "XAE 12", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 1, Image = "/img/bronze.png" },
+                new Product() { Id = -2, Name = "E 11", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 2, Image = "/img/bronze.png" },
+                new Product() { Id = -3, Name = "A 14", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 3, Image = "/img/bronze.png" }
+            );
+
+            builder.Entity<ProductLink>().HasData(
+                new ProductLink() {Id = -1, Link = "google.com", Price = 50, ProductId = -1, Store = "Rozetka" }
+            );
 
             builder.Entity<Issue>().HasData(
                 new Issue() { Id = -1, ProjectId = -1, UserId = "1", Title = "Alert!", Content = "That's bad", Status = "OPENED" }

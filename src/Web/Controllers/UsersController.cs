@@ -43,7 +43,7 @@ namespace Jineo.Controllers
             await userManager.AddToRoleAsync(user, role);
             return RedirectToAction("UsersSuperAdmin");
         }
-        public async Task<IActionResult> ChangeSub(string subId)
+        public async Task<IActionResult> ChangeSubForMe(string subId)
         {
             var user = await userManager.FindByEmailAsync(User.Identity.Name);
             user.SubscriptionId = int.Parse(subId);
