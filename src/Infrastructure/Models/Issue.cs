@@ -10,6 +10,7 @@ namespace Jineo.Models
         public Project Project {get;set;}
         public string UserId { get; set; }
         public JineoUser User {get;set;}
+        public string OwnerEmail {get;set;}
         public string Content { get; set; }
         public string Title {get;set;}
         public string Status { get; set; }

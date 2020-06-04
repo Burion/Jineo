@@ -6,6 +6,15 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="container-flex">
+        <h1>Welcome to alanyzer page!</h1>
+    </div>
+    <h4>What is analyzer?</h4>
+    <p>It is our service, that allows you to analyzer ground based on severacl characteristics and recieve 3D model of surface in order to plan you building process in most approptiate way!</p>
+    <h4>How can I use it?</h4>
+    <p>1) Select file with data to analyze via file selector.</p>
+    <p>2) Hit "Analyze" button to get result.</p>
+    <hr>
     <form asp-action="UploadAnalyzeFile" method="POST" enctype="multipart/form-data">
         <input type="file" class="form-conrol" name="file">
         <button type="submit">Analyze</button>

@@ -27,7 +27,7 @@
                     Info
                 </div>
                 <div class="card-body container-100">
-                    @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
+                    @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1, ReadOnly = true })
                     @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1, ReadOnly = true })
                     @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1, ReadOnly = true })
                 </div>  

@@ -10,6 +10,7 @@ namespace Jineo.Models
         public string Type { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
+        public string OwnerEmail {get;set;}
         public DateTime CreationDate { get; set; }
         public string Json { get; set; }
         public IEnumerable<UserProject> UsersProjects {get;set;}

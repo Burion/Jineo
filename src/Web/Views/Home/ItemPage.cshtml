@@ -42,7 +42,6 @@
                     <tbody>
                         @foreach(var link in Model.Links)
                         {
-                            
                                 <tr>
                                     <td>
                                         <div class="d-flex">
@@ -60,39 +59,87 @@
                                 </td>
                             </tr>
                         }
+                        @if(@User.IsInRole("SuperAdmin"))
+                        {
+                            <tr>
+                                <form asp-action="AddLink">
+
+                                    <td>
+                                        <select name="store" id="">
+                                            <option value="Rozetka">Rozetka</option>
+                                            <option value="Prom">Prom</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="link" placeholder="Link">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="price" placeholder="Price">
+                                    </td>
+                                    <input type="text" name="productId" id="" value="@Model.Id" hidden>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </td>
+                                </form>
+                                </tr>
+                        }
                     </tbody>
                 </table>
+
+                @if(User.IsInRole("Insure"))
+                {
+                    <label for="">Insurance info</label>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Currently running: @Model.Running
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
             </div>
         </div>
         @if(!Model.Reviews.Where(r => r.User.Email == User.Identity.Name).Select(r => r.Product.Id).Contains(Model.Id))
         {
-            <div class="m-3">
-                <form asp-action="AddReview">
-                    <label for="">Leave your review here:</label>
-                    <select name="Mark" id="">
-                        <option value="1">
-                            1
-                        </option>
-                        <option value="2">
-                            2
-                        </option>
-                        <option value="3">
-                            3
-                        </option>
-                        <option value="4">
-                            4
-                        </option>
-                        <option value="5">
-                            5
-                        </option>
-                    </select>
-                    <textarea class="form-control" type="text" name="text"></textarea>
-                    <input type="text" name="ProductId" value="@Model.Id" hidden>
-                    <button type="submit" class="btn btn-primary mt-2">Leave</button>
-                </form>
-            </div>
+            if(User.IsInRole("SuperAdmin") || User.IsInRole("Insure"))
+            {
+                <label for="">You can't leave reviews.</label>
+            }
+            else
+            {
+                <div class="m-3">
+                    <form asp-action="AddReview">
+                        <label for="">Leave your review here:</label>
+                        <select required name="Mark" id="">
+                            <option value="">
+                                ...
+                            </option>
+                            <option value="1">
+                                1
+                            </option>
+                            <option value="2">
+                                2
+                            </option>
+                            <option value="3">
+                                3
+                            </option>
+                            <option value="4">
+                                4
+                            </option>
+                            <option value="5">
+                                5
+                            </option>
+                        </select>
+                        <textarea class="form-control" type="text" name="text"></textarea>
+                        <input type="text" name="ProductId" value="@Model.Id" hidden>
+                        <button type="submit" class="btn btn-primary mt-2">Leave</button>
+                    </form>
+                </div>
+            }
         }
-        else
+        else 
         {
             <label for="">You already left your review.</label>
         }
@@ -113,6 +160,14 @@
                                 <i class="glyphicon glyphicon-star"></i>
                             }
                         </div>
+                        @if(r.User.Email == User.Identity.Name)
+                        {
+                            <form asp-action="DeleteReview">
+                                <input type="text" value="@r.UserId" name="userId" hidden>
+                                <input type="text" value="@r.ProductId" name="productId" hidden>
+                                <button type="submit" class="btn btn-outline-danger">Delete</button>
+                            </form>
+                        }
                     </div>
                 </div>
                 <p class="m-3">

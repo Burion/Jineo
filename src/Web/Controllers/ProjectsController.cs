@@ -19,6 +19,8 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using Jineo.MobileModels;
+using System.Net.Mail;
 
 namespace Jineo.Controllers
 {
@@ -58,6 +60,13 @@ namespace Jineo.Controllers
             model.Project = projectDTO;
             return View(model);
         }
+
+        public async Task<IActionResult> DeleteProject(string id)
+        {
+            ctx.Projects.Remove(ctx.Projects.Single(p => p.Id == int.Parse(id)));
+            ctx.SaveChanges();
+            return RedirectToAction("ProjectsPage");
+        }
         [HttpGet]
         public async Task<IActionResult> NewProject()
         {
@@ -68,7 +77,7 @@ namespace Jineo.Controllers
         public async Task<IActionResult> NewProject(string name, string desc, string type, IFormFile file)
         {
             var user = await um.FindByEmailAsync(User.Identity.Name);
-            var project = new Project() { Name = name, Description = desc, Type = type };
+            var project = new Project() { Name = name, Description = desc, Type = type, CreationDate = DateTime.Now.Date, OwnerEmail = User.Identity.Name };
             string path = "/img/" + file.FileName;
             using (var fileStream = new FileStream(_env.WebRootPath + path, FileMode.Create))
             {
@@ -124,7 +133,7 @@ namespace Jineo.Controllers
         [Route("issues")]
         public async Task<JsonResult> Issues (string id)
         {
-            var issues = ctx.Issues.Include(i => i.User).Include(i => i.Comments).Include(i => i.IssueSensors).ThenInclude(ise => ise.Sensor).Where(i => i.ProjectId == int.Parse(id));
+            var issues = ctx.Issues.Include(i => i.User).Include(i => i.Comments).ThenInclude(c => c.User).Include(i => i.IssueSensors).ThenInclude(ise => ise.Sensor).Where(i => i.ProjectId == int.Parse(id));
             var issuesDTO = mapper.Map<IssueDTO[]>(issues);
 
             return new JsonResult(new { issues = issuesDTO });
@@ -144,7 +153,7 @@ namespace Jineo.Controllers
 
         public IActionResult AddIssue(string projectid, string content, string title, string[] sensorsIds)
         {
-            var issue = new Issue() { ProjectId = int.Parse(projectid), Content = content, Title = title };
+            var issue = new Issue() { ProjectId = int.Parse(projectid), Content = content, Title = title, Status = "OPENED", OwnerEmail = User.Identity.Name };
             ctx.Issues.Add(issue);
             ctx.SaveChanges();
 
@@ -174,10 +183,53 @@ namespace Jineo.Controllers
             return new JsonResult(new { sensors });
         }
 
+        public IActionResult SendRequest()
+        {
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+
+            smtpClient.Credentials = new System.Net.NetworkCredential("vladislavburyak@gmail.com", "vlad06021222a");
+            // smtpClient.UseDefaultCredentials = true; // uncomment if you don't want to use the network credentials
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+            MailMessage mail = new MailMessage();
+
+            //Setting From , To and CC
+            mail.From = new MailAddress("vladislavburyak@gmail.com");
+            mail.To.Add(new MailAddress("vladyslav.buryak@nure.ua"));
+
+            smtpClient.Send(mail);
+            return Content("Email has been sent.");
+        }
+
+        [Route("getprojects/{email}")]
+        public IActionResult GetProjectsByEmail(string email)
+        {
+            var user = ctx.Users.Single(u => u.Email == email);
+            if(user == null)
+                return new JsonResult(new { projects = new ProjectModel[] { } });
+            var projects = ctx.UsersProjects.Where(up => up.User.Email == email);
+            var projectsmodels = mapper.Map<ProjectModel[]>(projects);
+            return new JsonResult(new { projects = projectsmodels });   
+
+        }
+
+        [Route("getsensors/{projectId}")]
+        public IActionResult GetSensorsJson(string projectId)
+        {
+            var sensors = ctx.Sensors.Where(s => s.ProjectId == int.Parse(projectId));
+            var sensorsmodels = mapper.Map<SensorModel>(sensors);
+            return new JsonResult(new { sensors = sensorsmodels });
+        }
         [Route("addsensor")]
         public JsonResult AddSensor(string projectId, string x, string y, string name, string upperValue, string lowerValue, string productId) 
         {
-            var json = new[] { new { value = 40, date = DateTime.Now }, new { value = 45, date = DateTime.Now } };
+            Random r = new Random();
+            List<object> meterings = new List<object>();
+            for(int a = 0; a < 30; a++)
+            {
+                meterings.Add(new { value = r.Next(50, 100), date = DateTime.Now });
+            }
+            var json = meterings.ToArray();
             var _json = Newtonsoft.Json.JsonConvert.SerializeObject(json);
             // TODO FIX PRODUCTID
             ctx.Sensors.Add(new Sensor() { ProductId = int.Parse(productId), ProjectId = int.Parse(projectId), Name = name, X = float.Parse(x), Y = float.Parse(y), UpperValue = int.Parse(upperValue), LowerValue = int.Parse(lowerValue), Data = _json });

@@ -37,6 +37,16 @@ namespace Jineo.Helpers
                 user.EmailConfirmed = true;
                 IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
             }
+
+            if (userManager.FindByEmailAsync("normal2@localhost").Result == null)
+            {
+                JineoUser user = new JineoUser();
+                user.Id = "5";
+                user.UserName = "normal2@localhost";
+                user.Email = "normal2@localhost";
+                user.EmailConfirmed = true;
+                IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
+            }
  
  
             if (userManager.FindByEmailAsync("admin@localhost").Result == null)
@@ -56,6 +66,24 @@ namespace Jineo.Helpers
                     userManager.AddToRoleAsync(user, "Admin").Wait();
                 }
             }
+
+            if (userManager.FindByEmailAsync("insure@localhost").Result == null)
+            {
+                
+                JineoUser user = new JineoUser();
+                user.Id = "4";
+                user.UserName = "insure@localhost";
+                user.Email = "insure@localhost";
+                user.CompanyId = -1;
+                user.EmailConfirmed = true;
+ 
+                IdentityResult result = userManager.CreateAsync(user, "Vlad1_").Result;
+ 
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Insure").Wait();
+                }
+            }
         }
  
         private static void SeedRoles (RoleManager<IdentityRole> roleManager)
@@ -67,6 +95,14 @@ namespace Jineo.Helpers
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;
             }
+
+            if (!roleManager.RoleExistsAsync("Insure").Result)
+            {
+                IdentityRole role = new IdentityRole();
+                role.Name = "Insure";
+                IdentityResult roleResult = roleManager.
+                CreateAsync(role).Result;
+            }   
 
             if (!roleManager.RoleExistsAsync("Banned").Result)
             {

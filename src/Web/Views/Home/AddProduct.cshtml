@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form asp-action="AddProduct" enctype="multipart/form-data">
+        <label for="">Name</label>
+        <input required class="form-control" type="text" name="name">
+        <label for="">Description</label>
+        <input required class="form-control" type="text" name="desc">
+        <label for="">Type of product</label>
+        <select required name="type" id="">
+            <option value="">Select type...</option>
+            <option value="1">Toughness</option>
+            <option value="2">Temperature</option>
+            <option value="3">Pressure</option>
+        </select>
+        <label for="">Image</label>
+        <input required class="form-control" type="file" name="file">
+        <button class="btn btn-primary" type="submit">Add</button>
+    </form>
+</body>
+</html>

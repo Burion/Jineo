@@ -12,6 +12,9 @@ using Jineo.Data;
 using AutoMapper;
 using Jineo.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Jineo.Controllers
 {
@@ -20,17 +23,27 @@ namespace Jineo.Controllers
         private readonly ILogger<HomeController> _logger;
         readonly ApplicationDbContext ctx;
         readonly IMapper mapper;
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext ctx, IMapper mapper)
+        
+        IWebHostEnvironment _env;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext ctx, IMapper mapper, IWebHostEnvironment appEnvironment)
         {
             _logger = logger;
             this.ctx = ctx;
             this.mapper = mapper;
+            _env = appEnvironment;
         }
 
         
         public IActionResult Index()
         {
             return View();
+        }
+        public async Task<IActionResult> AddLink(string store, string link, string price, string productId)
+        {
+            ProductLink _link = new ProductLink() { Link = link, Store = store, Price = float.Parse(price), ProductId = int.Parse(productId) };
+            ctx.ProductLinks.Add(_link);
+            ctx.SaveChanges();
+            return RedirectToAction("ItemPage", new { id = int.Parse(productId) });
         }
 
         [Route("home/store/{id}")]
@@ -47,9 +60,17 @@ namespace Jineo.Controllers
             {    
                 productDTO.AvgMark = (int)ctx.Reviews.Where(r => r.ProductId == productDTO.Id).Average(pl => pl.Mark);
             }
+            productDTO.Running = ctx.Sensors.Where(s => s.ProductId == productDTO.Id).Count();
             return View(productDTO);
         }
-
+        
+        public async Task<IActionResult> DeleteReview(string productId, string userId)
+        {
+            var r = ctx.Reviews.Single(r => r.ProductId == int.Parse(productId) && r.UserId == userId);
+            ctx.Reviews.Remove(r);
+            ctx.SaveChanges();
+            return RedirectToAction("ItemPage", new { id = int.Parse(productId)});
+        }
         public IActionResult AddReview(ReviewDTO review)
         {
             var user = ctx.Users.Single(u => u.Email == User.Identity.Name);
@@ -91,6 +112,28 @@ namespace Jineo.Controllers
         {
             
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(string name, string desc, string type, IFormFile file)
+        {
+            var user = ctx.Users.Single(u => u.Email == User.Identity.Name);
+            var product = new Product() { Name = name, Description = desc, ProductTypeId = int.Parse(type) };
+            string path = "/img/" + file.FileName;
+            using (var fileStream = new FileStream(_env.WebRootPath + path, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            product.Image = path;
+            ctx.Products.Add(product);
+            ctx.SaveChanges();
+            return RedirectToAction("Store");
         }
         
 

@@ -16,7 +16,7 @@ function drawChart(data){
             data: {
                 labels: dates,
                 datasets: [{
-                    label: 'My First dataset',
+                    label: 'Data',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: values

@@ -14,5 +14,6 @@ namespace Jineo.DTOs
         public int AvgMark {get;set;}
         public List<ProductLinkDTO> Links {get;set;}
         public List<ReviewDTO> Reviews {get;set;}
+        public int Running {get;set;}
     }
 }

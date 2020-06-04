@@ -124,6 +124,7 @@ function printSensors(sensors, canvas) {
         
         circle.type = 'sensor'
         circle.id = s.id
+        console.log(s)
         circle.name = s.name
         circle.selectable = false
         canvas.add(circle)

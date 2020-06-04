@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using Jineo.DTOs;
+using Jineo.MobileModels;
 using Jineo.Models;
 
 namespace Jineo.Helpers
@@ -36,6 +37,10 @@ namespace Jineo.Helpers
             //Reviews
             CreateMap<Review, ReviewDTO>();
             CreateMap<ReviewDTO, Review>();
+
+            //Mobile
+            CreateMap<Project, ProjectModel>();
+            CreateMap<Sensor, SensorModel>();
             
         }
     }

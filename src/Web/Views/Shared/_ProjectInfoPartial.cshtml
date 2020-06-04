@@ -10,7 +10,15 @@
     <link rel="stylesheet" href="~/css/site.css">
 </head>
 <body>
+
     <div class="" id="info"></div>
+    @if(!Model.ReadOnly)
+    {   
+        <form asp-action="DeleteProject">
+            <input hidden type="text" name="id" value="@Model.Id">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+        </form>
+    }
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
@@ -31,7 +39,6 @@
                 r += '<div class="geninfo">'
                 r += '<div class="geninfo-name-status">'
                 r += '<h1 class="geninfo-name">' + response.project.name + '</h1>'
-                r += '<h2 class="alert-sign"></h2>'
                 r += '</div>'
                 r += '<label for="">' + response.project.type + '</label>'
                 r += '<p class="geninfo-description">'

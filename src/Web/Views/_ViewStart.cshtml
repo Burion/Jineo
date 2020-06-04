@@ -15,6 +15,11 @@
         Layout = "/Views/Shared/_LayoutSuperAdmin.cshtml";
     }
     else
+    if(this.User.IsInRole("Insure"))
+    {
+        Layout = "/Views/Shared/_LayoutInsure.cshtml";
+    }
+    else
     {
         Layout = "/Views/Shared/_Layout.cshtml";
     }

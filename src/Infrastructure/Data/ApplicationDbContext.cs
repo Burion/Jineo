@@ -82,7 +82,7 @@ namespace Jineo.Data
                 
             builder.Entity<Project>().HasData(
                 new Project() { Id = -1,  Name = "Empire State Building"}, 
-                new Project() { Id = -2,  Name = "Fuck"}
+                new Project() { Id = -2,  Name = "Second project"}
                 
             );
 

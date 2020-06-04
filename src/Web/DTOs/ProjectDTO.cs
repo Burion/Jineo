@@ -10,6 +10,7 @@ namespace Jineo.DTOs
         public string Description {get;set;}
         public string Json {get;set;}
         public string Image {get;set;}
+        public string OwnerEmail {get;set;}
         public DateTime CreationDate { get; set; }
     }
 }

@@ -51,7 +51,11 @@
                     r += '</div>'
                     r += '<div class="divider-vertical"></div>'
                     r += '<div class="project-list-element">'
-                    r += '10.04.20'
+                    var d = new Date(response.projects[x].creationDate)
+                    const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+                    const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d)
+                    const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+                    r += da + ' ' + mo + ' ' + ye
                     r += '</div>'
                     r += '<div class="project-list-element">'
                     r += '<a href="/projects/' + response.projects[x].id + '" >Deiailed</a>'

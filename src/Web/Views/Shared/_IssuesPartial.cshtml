@@ -27,7 +27,7 @@
         <label for="">Details</label>
         <textarea id="issuedetails" name="" id="" cols="30" rows="10" class="form-control" placeholder="Write detailed description here"></textarea>
         
-        <a onclick="addIssue()" class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"></a>
+        <a onclick="addIssue()" class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Add Issue</a>
         </div>
     </div>
     <div class="accordion" id="accordionExample">
@@ -51,6 +51,7 @@
             url: '/addcomment',
             success: function (response) {
                 updateComments(issueId)
+                document.getElementById(issueId + '-input').value = ''
             }
             }
             )
@@ -75,6 +76,11 @@
         url: '/addissue',
         success: function (response) {
             loadIssues(projectId)
+            document.getElementById('issuetitle').value = ''
+            document.getElementById('issuedetails').value = ''
+            issueSensors = []
+            updateIssueSensors()
+
         }
         }
         )
@@ -135,8 +141,10 @@
                     r += '</div>'
                     r += '<div id="collapse' + i +'" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">'
                     r += '<div class="card-body">'
-                    var status = "'FUCKED'"
-                    r += '<button id="f" class="btn btn-outline-primary" type="radio" onclick="changeStatus('+ response.issues[i].id +', '+ status +')">Switch state</button>'
+                        if(response.issues[i].ownerEmail == '@User.Identity.Name' )
+                        {
+                            r += '<button id="f" class="btn btn-outline-primary" type="radio" onclick="changeStatus('+ response.issues[i].id +', '+ status +')">Switch state</button>'
+                        }
                     response.issues[i].issueSensors.forEach(s => {
                         r += '<div class="container-flex">' 
                         r += '<div class="issue-sensor" onclick="selectSensor(' + s.sensorId + ')">' + s.sensor.name + '</div>'
@@ -158,7 +166,7 @@
                     }
                     r += '</div>'
                     r += '<input class="form-control" id="' +  response.issues[i].id + '-input"></input>'
-                    r += '<button class="btn btn-primary" onclick="addComment(' + response.issues[i].id +  ') "></button>'
+                    r += '<button class="btn btn-primary" onclick="addComment(' + response.issues[i].id +  ') ">Comment</button>'
                     r += '</div>'
                     r += '</div>'
                     r += '</div>'
