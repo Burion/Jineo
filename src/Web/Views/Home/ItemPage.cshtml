@@ -1,52 +1,61 @@
 @model Jineo.DTOs.ProductDTO
-
+@using Jineo.Models
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./bootstrap/fonts/fonts-glyphicons.css">
-    <link rel="stylesheet" href="./bootstrap/dist/site.css">
+    <link rel="stylesheet" href="./fonts/fonts-glyphicons.css">
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-5">
-                <div class="item-image-main rounded m-3" style="background-image: url(https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg);">
+                <div class="item-image-main rounded m-3" style="background-image: url('@Model.Image');">
 
                 </div>
             </div>
             <div class="col-3 m-3">
                 <h1>@Model.Name</h1>
-                <label>@Model.ProductTypeId</label>
+                <label>@((SensorType)Model.ProductTypeId)</label>
                 <div class="d-flex mb-3">
-                    <i class="glyphicon glyphicon-star"></i>
-                    <i class="glyphicon glyphicon-star"></i>
-                    <i class="glyphicon glyphicon-star"></i>
-                    <i class="glyphicon glyphicon-star"></i>
-                    <i class="glyphicon glyphicon-star"></i>
+                    @for(int x = 0; x < 5; x++)
+                    {
+                        if(x < @Model.AvgMark)
+                        {
+                            <i class="glyphicon glyphicon-star"></i>
+                        }
+                        else 
+                        {
+                            <i class="glyphicon glyphicon-star-empty"></i>
+                        }
+                    }
+                    
                 </div>
                 <div class="d-flex justify-content-start">
                     <i class="glyphicon-euro glyphicon"></i>
                     <h3>~@Model.AvgPrice</h3>
                 </div>
+                <p>@Model.Description</p>
                 <table class="table table-bordered table-hover">
                     <tbody>
                         @foreach(var link in Model.Links)
                         {
-                            <tr>
-                                <td>
-                                    <div class="d-flex">
-                                        @{ string image = link.Store + ".png"; }
-                                        <div class="thumb-company" style="background-image: url(/img/@image);"></div>
-                                        <p>
-                                            @link.Store
-                                        </p>
-                                    </div>
-                                </td>
-                                <td>
+                            
+                                <tr>
+                                    <td>
+                                        <div class="d-flex">
+                                            @{ string image = link.Store + ".png"; }
+                                            <div class="thumb-company" style="background-image: url(/img/@image);"></div>
+                                            <p>
+                                                <a href="@link.Link">
+                                                    @link.Store
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td>
                                     @link.Price $
                                 </td>
                             </tr>
@@ -55,58 +64,64 @@
                 </table>
             </div>
         </div>
-        <div class="m-3">
-            <label for="">Leave your review here:</label>
-            <textarea class="form-control" type="text">
-            </textarea>
-            <button class="btn btn-primary mt-2">Leave</button>
-        </div>
-        <div class="card m-3">
-            <div class="card-header card-header">
-
-                <div class="d-flex justify-content-sm-between">
-                    <div class="d-inline-flex align-items-center">
-                        <div class="profile-image rounded-circle m-2" style="background-image: url(https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png);">
+        @if(!Model.Reviews.Where(r => r.User.Email == User.Identity.Name).Select(r => r.Product.Id).Contains(Model.Id))
+        {
+            <div class="m-3">
+                <form asp-action="AddReview">
+                    <label for="">Leave your review here:</label>
+                    <select name="Mark" id="">
+                        <option value="1">
+                            1
+                        </option>
+                        <option value="2">
+                            2
+                        </option>
+                        <option value="3">
+                            3
+                        </option>
+                        <option value="4">
+                            4
+                        </option>
+                        <option value="5">
+                            5
+                        </option>
+                    </select>
+                    <textarea class="form-control" type="text" name="text"></textarea>
+                    <input type="text" name="ProductId" value="@Model.Id" hidden>
+                    <button type="submit" class="btn btn-primary mt-2">Leave</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <label for="">You already left your review.</label>
+        }
+        @foreach(var r in Model.Reviews)
+        {
+            <div class="card m-3">
+                <div class="card-header card-header">
+    
+                    <div class="d-flex justify-content-sm-between">
+                        <div class="d-inline-flex align-items-center">
+                            <div class="profile-image rounded-circle m-2" style="background-image: url(https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png);">
+                            </div>
+                            <p class="m-0">@r.User.UserName</p>
                         </div>
-                        <p class="m-0">Andrew X</p>
-                    </div>
-                    <div class="d-flex m-3">
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
+                        <div class="d-flex m-3">
+                            @for(int x = 0; x < r.Mark; x++)
+                            {
+                                <i class="glyphicon glyphicon-star"></i>
+                            }
+                        </div>
                     </div>
                 </div>
+                <p class="m-3">
+                    @r.Text
+                </p>    
+                
             </div>
-            <p class="m-3">
-                Есть много вариантов Lorem Ipsum, но большинство из них имеет не всегда приемлемые модификации, например, юмористические вставки или слова, которые даже отдалённо не напоминают латынь. Если вам нужен Lorem Ipsum для серьёзного проекта, вы наверняка не хотите какой-нибудь шутки, скрытой в середине абзаца. Также все другие известные генераторы Lorem Ipsum используют один и тот же текст, который они просто повторяют, пока не достигнут нужный объём. Это делает предлагаемый здесь генератор единственным настоящим Lorem Ipsum генератором. Он использует словарь из более чем 200 латинских слов, а также набор моделей предложений. В результате сгенерированный Lorem Ipsum выглядит правдоподобно, не имеет повторяющихся абзацей или "невозможных" слов.
-            </p>    
-            
-        </div>
-        <div class="card m-3">
-            <div class="card-header card-header">
-
-                <div class="d-flex justify-content-sm-between">
-                    <div class="d-inline-flex align-items-center">
-                        <div class="profile-image rounded-circle m-2" style="background-image: url(https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png);">
-                        </div>
-                        <p class="m-0">Andrew X</p>
-                    </div>
-                    <div class="d-flex m-3">
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                        <i class="glyphicon glyphicon-star"></i>
-                    </div>
-                </div>
-            </div>
-            <p class="m-3">
-                Есть много вариантов Lorem Ipsum, но большинство из них имеет не всегда приемлемые модификации, например, юмористические вставки или слова, которые даже отдалённо не напоминают латынь. Если вам нужен Lorem Ipsum для серьёзного проекта, вы наверняка не хотите какой-нибудь шутки, скрытой в середине абзаца. Также все другие известные генераторы Lorem Ipsum используют один и тот же текст, который они просто повторяют, пока не достигнут нужный объём. Это делает предлагаемый здесь генератор единственным настоящим Lorem Ipsum генератором. Он использует словарь из более чем 200 латинских слов, а также набор моделей предложений. В результате сгенерированный Lorem Ipsum выглядит правдоподобно, не имеет повторяющихся абзацей или "невозможных" слов.
-            </p>    
-            
-        </div>
+        }
+      
     </div>
 </body>
 </html>

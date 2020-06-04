@@ -11,29 +11,11 @@
 </head>
 <body>
     <div class="container">
-        <div>
-            <div class="m-2">
-                <label>Search</label>
-                <input class="form-control" type="text">
-            </div>
-            <div class="m-2">
-                <label>What we are searching:</label>
-                <div class="">
-                    <div class="d-inline align-content-center m-2">
-                        <input id="temperature" type="checkbox">
-                        <label for="">Temperature</label>
-                    </div>
-                    <div class="d-inline align-content-center m-2">
-                        <input id="temperature" type="checkbox">
-                        <label for="">Pressure</label>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <div class="row justify-content-sm-center">
             @foreach(var item in Model.Products)
             {
-                <div class="col-3 m-3 item-store" onclick="window.location='http://google.com'" >
+                <div class="col-3 m-3 item-store" onclick="window.location='/home/store/@item.Id'" >
                     <div class="p-3 text-center">
                         <div>
                             <div class="item-image" style="background-image: url('@item.Image');"></div>
@@ -41,11 +23,17 @@
                         <div class="d-flex justify-content-between">
                             <label class="text-muted" for="">Temperature</label>
                             <div class="">
-                                <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
-                                <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
-                                <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
-                                <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
-                                <i class="glyphicon glyphicon-star-empty text-muted" aria-hidden="true"></i>
+                                @for(int x = 0; x < 5; x++)
+                                {
+                                    if(x < item.AvgMark)
+                                    {
+                                        <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="glyphicon glyphicon-star-empty text-muted" aria-hidden="true"></i>
+                                    }
+                                }
                             </div>
                         </div>
                         <h4>@item.Name</h4>

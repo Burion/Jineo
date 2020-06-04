@@ -18,9 +18,11 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Jineo.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         readonly IMapper mapper;
@@ -36,16 +38,7 @@ namespace Jineo.Controllers
             _env = appEnvironment;
         }
     
-        // public IActionResult Projects()
-        // {        
-        //     var model = new ProjectsListPageViewModel() { Message = "hello"};
-        //     model.Projects = mapper.Map<List<ProjectDTO>>(ctx.Projects);
-        //     model.Message = ctx.Projects.Count().ToString();
-        //     var user = um.FindByEmailAsync(User.Identity.Name).Result;
-        //     Console.WriteLine($"USER ROLES: {um.GetRolesAsync(user).Result.First()}");
-        //     Console.WriteLine(User.IsInRole("SuperU"));
-        //     return View(model);
-        // }
+        
         [Route("projectusers")]
         public async Task<JsonResult> ProjectUsers(string id)
         {
@@ -61,6 +54,7 @@ namespace Jineo.Controllers
             ProjectPageViewModel model = new ProjectPageViewModel();
             var project = ctx.Projects.Single(p => p.Id == int.Parse(id));
             var projectDTO = mapper.Map<ProjectDTO>(project);
+            model.Products = mapper.Map<ProductDTO[]>(ctx.Products.ToArray());
             model.Project = projectDTO;
             return View(model);
         }
@@ -169,16 +163,24 @@ namespace Jineo.Controllers
         [Route("getsensors")]
         public JsonResult GetSensors(string projectId)
         {
-            var sensors = mapper.Map<SensorDTO[]>(ctx.Sensors);
+            List<Sensor> s = new List<Sensor>();
+            if(ctx.Sensors.Where(s => s.ProjectId == int.Parse(projectId)).Count() > 0)
+            {
+                s = ctx.Sensors.Where(s => s.ProjectId == int.Parse(projectId)).Include(s => s.Product).ToList();
+            }
+            var sensors = new SensorDTO[] { };
+            if(s.Count() > 0)
+                sensors = mapper.Map<SensorDTO[]>(s);
             return new JsonResult(new { sensors });
         }
 
         [Route("addsensor")]
-        public JsonResult AddSensor(string projectId, string x, string y, string name, string upperValue, string lowerValue) 
+        public JsonResult AddSensor(string projectId, string x, string y, string name, string upperValue, string lowerValue, string productId) 
         {
             var json = new[] { new { value = 40, date = DateTime.Now }, new { value = 45, date = DateTime.Now } };
             var _json = Newtonsoft.Json.JsonConvert.SerializeObject(json);
-            ctx.Sensors.Add(new Sensor() { ProjectId = int.Parse(projectId), Name = name, X = float.Parse(x), Y = float.Parse(y), UpperValue = int.Parse(upperValue), LowerValue = int.Parse(lowerValue), Data = _json });
+            // TODO FIX PRODUCTID
+            ctx.Sensors.Add(new Sensor() { ProductId = int.Parse(productId), ProjectId = int.Parse(projectId), Name = name, X = float.Parse(x), Y = float.Parse(y), UpperValue = int.Parse(upperValue), LowerValue = int.Parse(lowerValue), Data = _json });
             ctx.SaveChanges();
             return new JsonResult( new { Message = "Sensor was added" });
         }
@@ -214,24 +216,7 @@ namespace Jineo.Controllers
         [Route("analyze")]
         public async Task<IActionResult> Analyze(string _json)
         {
-            // Random r = new Random();
-            // List<DataBlock> blocks = new List<DataBlock>();
-            // for(int x = 0; x < 10; x++) 
-            // {
-            //     for(int y = 0; y < 10; y++)
-            //     {
-            //         var dencity = (float)r.Next(13, 22) / 10;
-            //         var pressure = (float)r.Next(9, 30) / 10;
-            //         var waterproof = (float)r.Next(1, 100) / 100;
-            //         var dict = new Dictionary<int, float>();
-            //         dict.Add((int)MeteringType.Density, dencity);
-            //         dict.Add((int)MeteringType.Pressure, pressure);
-            //         dict.Add((int)MeteringType.Waterproof, waterproof);
-            //         blocks.Add(new DataBlock() { Data = dict, X = x, Y = y });
-            //     }
-            // }
-            // var cells = DataAnalizer.AnalizeData(blocks, 4);
-            //var json = Newtonsoft.Json.JsonConvert.SerializeObject(cells);
+            
             var blocks = Newtonsoft.Json.JsonConvert.DeserializeObject<DataBlock[]>(_json).ToList();
             var cells = DataAnalizer.AnalizeData(blocks, 4);
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(cells);

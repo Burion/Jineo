@@ -11,5 +11,6 @@ namespace Jineo.Models
         public string Description {get;set;}
         public string Image {get;set;}
         public List<ProductLink> Links {get;set;}
+        public List<Review> Reviews {get;set;}
     }
 }

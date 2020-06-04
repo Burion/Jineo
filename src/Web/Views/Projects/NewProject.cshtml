@@ -8,18 +8,18 @@
 <body>
     <form asp-action="NewProject" enctype="multipart/form-data">
         <label for="">Name</label>
-        <input class="form-control" type="text" name="name">
+        <input required class="form-control" type="text" name="name">
         <label for="">Description</label>
-        <input class="form-control" type="text" name="desc">
+        <input required class="form-control" type="text" name="desc">
         <label for="">Type of building</label>
-        <select name="type" id="">
+        <select required name="type" id="">
             <option value="">Select type...</option>
             <option value="office building">Office building</option>
             <option value="factory">Factory</option>
             <option value="living apartement">Living apartement</option>
         </select>
         <label for="">Image</label>
-        <input class="form-control" type="file" name="file">
+        <input required class="form-control" type="file" name="file">
         <button class="btn btn-primary" type="submit">Add</button>
     </form>
 </body>

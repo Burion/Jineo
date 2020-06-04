@@ -36,10 +36,29 @@ namespace Jineo.Controllers
         [Route("home/store/{id}")]
         public IActionResult ItemPage(string id)
         {
-            var product = ctx.Products.Include(p => p.Links).Single(p => p.Id == int.Parse(id));
+            var product = ctx.Products.Include(p => p.Links).Include(p => p.Reviews).ThenInclude(r => r.User).Single(p => p.Id == int.Parse(id));
             var productDTO = mapper.Map<ProductDTO>(product);
+            if(ctx.ProductLinks.Where(pl => pl.ProductId == productDTO.Id).Count() > 0)
+            {    
+                productDTO.AvgPrice = ctx.ProductLinks.Where(pl => pl.ProductId == productDTO.Id).Average(pl => pl.Price);
+            }
+
+            if(ctx.Reviews.Where(r => r.ProductId == productDTO.Id).Count() > 0)
+            {    
+                productDTO.AvgMark = (int)ctx.Reviews.Where(r => r.ProductId == productDTO.Id).Average(pl => pl.Mark);
+            }
             return View(productDTO);
         }
+
+        public IActionResult AddReview(ReviewDTO review)
+        {
+            var user = ctx.Users.Single(u => u.Email == User.Identity.Name);
+            review.UserId = user.Id;
+            var r = mapper.Map<Review>(review);
+            ctx.Reviews.Add(r);
+            ctx.SaveChanges();
+            return RedirectToAction("ItemPage", new { id = review.ProductId.ToString() });
+        } 
         public IActionResult Store()
         {
             var items = ctx.Products.Include(p => p.Links).ToArray();
@@ -49,6 +68,10 @@ namespace Jineo.Controllers
                 if(ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Count() > 0)
                 {    
                     itemsDTO[x].AvgPrice = ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Average(pl => pl.Price);
+                }
+                if(ctx.Reviews.Where(pl => pl.ProductId == itemsDTO[x].Id).Count() > 0)
+                {    
+                    itemsDTO[x].AvgMark = (int)ctx.Reviews.Where(pl => pl.ProductId == itemsDTO[x].Id).Average(pl => pl.Mark);
                 }
             }
             var model = new StoreModel() { Products = itemsDTO };

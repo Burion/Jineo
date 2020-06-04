@@ -11,7 +11,8 @@ namespace Jineo.DTOs
         public float Y { get; set; }
 
         public string Data {get;set;}
-
+        public int ProductId {get;set;}
+        public ProductDTO Product {get;set;}
         public float UpperValue {get;set;}
         public float LowerValue {get;set;}
     }

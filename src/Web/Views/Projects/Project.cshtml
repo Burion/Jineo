@@ -26,10 +26,10 @@
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = -1 })
+                @Html.Partial("_ProjectInfoPartial", new PartialModel() { Id = @Model.Project.Id })
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                @Html.Partial("_UsersListPartial", new PartialModel() { Id = -1, ReadOnly = false })
+                @Html.Partial("_UsersListPartial", new PartialModel() { Id = @Model.Project.Id, ReadOnly = false })
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 @Html.Partial("_IssuesPartial", new PartialModel() { Id = -1, ReadOnly = false })
@@ -60,12 +60,30 @@
         <div id="modal" class="modal-body">
           <label for="">Name of sensor:</label>
           <input id='sensorname' class="form-control" type="">
-          <input id='uppervalue' class="form-control" type="number">
-          <input id='lowervalue' class="form-control" type="number">
+          <label for="">Lower value:</label>
+          <input required id='lowervalue' class="form-control" onchange="setmin()" type="number">
+          <label for="">Upper value:</label>
+          <input required id='uppervalue' class="form-control" type="number" min="0">
+          <label for="">Product</label>
+          <select id="productId" id="">
+            @foreach(var p in Model.Products)
+            {
+              <option value="@p.Id">
+                @p.Name
+              </option>
+            }
+          </select>
         </div>
+        <script>
+          function setmin()
+          {
+            var min = document.getElementById('lowervalue').value
+            document.getElementById('uppervalue').setAttribute('min', min)
+          }
+        </script>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button onclick="addSensor()" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+          <button onclick="addSensor()" type="submit" class="btn btn-primary" data-dismiss="modal">Save changes</button>
         </div>
       </div>
     </div>
@@ -78,16 +96,18 @@
     var name = document.getElementById('sensorname').value
     var upperValue = document.getElementById('uppervalue').value
     var lowerValue = document.getElementById('lowervalue').value
+    var productId = document.getElementById('productId').value
     $.ajax(
     {
     type: 'POST',
     data: {
-      projectId: '-1',
+      projectId: '@Model.Project.Id',
       name: name,
       x: sensorsX,
       y: sensorsY,
       upperValue: upperValue,
-      lowerValue: lowerValue
+      lowerValue: lowerValue,
+      productId: productId
     },
     url: '/addsensor',
     success: function (response) {
@@ -105,7 +125,7 @@
         {
         type: 'GET',
         data: {
-            id: '-1'
+            id: '@Model.Project.Id'
         },
         url: '/getproject',
         success: function (response) {
@@ -117,7 +137,7 @@
                 type: 'POST',
                 data: {
                     json: str,
-                    id: '-1'
+                    id: '@Model.Project.Id'
                 },
                 url: '/writeproject',
                 success: function (response) {
@@ -146,7 +166,7 @@
         {
         type: 'GET',
         data: {
-            sensorId: '45'
+            projectId: '@Model.Project.Id'
         },
         url: '/getsensors',
         success: function (response) {

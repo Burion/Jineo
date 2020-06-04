@@ -33,7 +33,9 @@ namespace Jineo.Helpers
             CreateMap<Product, ProductDTO>();
             CreateMap<ProductLink, ProductLinkDTO>();
 
-
+            //Reviews
+            CreateMap<Review, ReviewDTO>();
+            CreateMap<ReviewDTO, Review>();
             
         }
     }

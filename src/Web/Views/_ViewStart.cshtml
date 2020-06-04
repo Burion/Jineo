@@ -1,35 +1,22 @@
 ﻿@{
     @using Jineo.Extentions
-    if(this.User.Identity.IsAuthenticated)
-    {
-        if(this.User.IsInRole("Banned"))
-        {
-            Layout = "/Views/Shared/_BannedLayout.cshtml";
-        }
-        else
-        if(this.User.IsInRole("SuperAdmin"))
-        {
-            Layout = "/Views/Shared/_LayoutSuperAdmin.cshtml";
-        }
-        else
-        {
-            
-                if(User.IsInRole("Admin"))
-                {
-                    Layout = "/Views/Shared/_LayoutAdmin.cshtml";
-                }
-                else if(User.IsInRole("Employee"))
-                {
-                    Layout = "/Views/Shared/_Layout.cshtml";
-                }
-                else 
-                {
-                    Layout = "/Views/Shared/_Layout.cshtml";
-                }
-        }
-    }
-    else    
+    if(!this.User.Identity.IsAuthenticated)
     {
         Layout = "/Views/Shared/_LayoutGuest.cshtml";
     }
+    else
+    if(this.User.IsInRole("Banned"))
+    {
+        Layout = "/Views/Shared/_BannedLayout.cshtml";
+    }
+    else
+    if(this.User.IsInRole("SuperAdmin"))
+    {
+        Layout = "/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "/Views/Shared/_Layout.cshtml";
+    }
+    
 }

@@ -11,6 +11,8 @@ namespace Jineo.Models
         public Project Project {get;set;}
         public int TypeId {get;set;}
 
+        public int ProductId {get;set;}
+        public Product Product {get;set;}
         public float X { get; set; }
         public float Y { get; set; }
 

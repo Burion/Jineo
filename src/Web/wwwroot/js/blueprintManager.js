@@ -131,10 +131,24 @@ function selectSensor(sensorId) {
     if(sensor.type == 'sensor') {
         dropSensorsColors()
         mySensor = sensor
-        sensor.set('fill', 'orange');
+        sensor.set('fill', 'yellow');
         canvas.renderAll();
         
-        
+        var href = '/store/' + _sensor.product.id
+        var htm = "<a href='/home/store/" + _sensor.product.id + "'>" + _sensor.product.name + "</a>"
+        document.getElementById('sensorname').innerHTML = htm
+        if(_sensor.product.productTypeId == 1)
+        {
+            document.getElementById('sensortype').innerHTML = 'Toughness'
+        }
+        if(_sensor.product.productTypeId == 2)
+        {
+            document.getElementById('sensortype').innerHTML = 'Temperature'
+        }
+        if(_sensor.product.productTypeId == 3)
+        {
+            document.getElementById('sensortype').innerHTML = 'Pressure'
+        }
         drawChart(json)
     }
 }

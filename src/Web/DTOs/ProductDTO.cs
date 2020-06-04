@@ -11,6 +11,8 @@ namespace Jineo.DTOs
         public string Description {get;set;}
         public string Image {get;set;}
         public float AvgPrice {get;set;}
+        public int AvgMark {get;set;}
         public List<ProductLinkDTO> Links {get;set;}
+        public List<ReviewDTO> Reviews {get;set;}
     }
 }

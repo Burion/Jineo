@@ -16,6 +16,7 @@ namespace Jineo.Data
         public DbSet<Sensor> Sensors { get;set;} 
         public DbSet<Product> Products {get;set;}
         public DbSet<ProductLink> ProductLinks {get;set;}
+        public DbSet<Review> Reviews {get;set;}
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -24,12 +25,14 @@ namespace Jineo.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Review>().HasKey(r => new { r.UserId, r.ProductId });
+
             var data =  new[] { new { value = 45, date = DateTime.Now }, new { value = 55, date = DateTime.Now } };
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);   
             builder.Entity<Sensor>().HasData(
-                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f, Data = json, UpperValue = 50f, LowerValue = 10f },
-                new Sensor() { Id = -2, Name = "yaa", X = 200f, Y = 200f, Data = json, UpperValue = 50f, LowerValue = 10f }
+                new Sensor() { Id = -1, Name = "yaa", X = 100f, Y = 100f, Data = json, UpperValue = 50f, LowerValue = 10f, ProjectId = -1 },
+                new Sensor() { Id = -2, Name = "yaa", X = 200f, Y = 200f, Data = json, UpperValue = 50f, LowerValue = 10f, ProjectId = -2 }
             );
 
             builder.Entity<UserProject>().HasKey(up => new { up.ProjectId, up.JineoUserId });
@@ -40,13 +43,17 @@ namespace Jineo.Data
 
 
             builder.Entity<Product>().HasData(
-                new Product() { Id = -1, Name = "XAE 12", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 1, Image = "/img/bronze.png" },
-                new Product() { Id = -2, Name = "E 11", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 2, Image = "/img/bronze.png" },
-                new Product() { Id = -3, Name = "A 14", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 3, Image = "/img/bronze.png" }
+                new Product() { Id = -1, Name = "XAE 12", Description = "Innovational product that helps you to solve almost any problems.", ProductTypeId = 1, Image = "/img/sensor1.jpg" },
+                new Product() { Id = -2, Name = "E 11", Description = "Pressure sensor, that allows you to manage your system 1-st class way.", ProductTypeId = 2, Image = "/img/sensor2.jpg" },
+                new Product() { Id = -3, Name = "A 14", Description = "Temnerature sensor that requires no eyo on it to keep running.", ProductTypeId = 3, Image = "/img/sensor3.jpg" }
+            );
+
+            builder.Entity<Review>().HasData(
+                new Review() { UserId = "3", ProductId = -1, Text = "Great", Mark = 5 }
             );
 
             builder.Entity<ProductLink>().HasData(
-                new ProductLink() {Id = -1, Link = "google.com", Price = 50, ProductId = -1, Store = "Rozetka" }
+                new ProductLink() {Id = -1, Link = "https://bt.rozetka.com.ua/190067277/p190067277/?gclid=CjwKCAjwt-L2BRA_EiwAacX32StScd8-lgqKakD2LzongKsImKwwzEkuFgp_zc5FTCs4D8tOAeEGtxoCzR0QAvD_BwE", Price = 50, ProductId = -1, Store = "Rozetka" }
             );
 
             builder.Entity<Issue>().HasData(
