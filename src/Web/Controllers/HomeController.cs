@@ -53,7 +53,7 @@ namespace Jineo.Controllers
             var productDTO = mapper.Map<ProductDTO>(product);
             if(ctx.ProductLinks.Where(pl => pl.ProductId == productDTO.Id).Count() > 0)
             {    
-                productDTO.AvgPrice = ctx.ProductLinks.Where(pl => pl.ProductId == productDTO.Id).Average(pl => pl.Price);
+                productDTO.AvgPrice = (int)ctx.ProductLinks.Where(pl => pl.ProductId == productDTO.Id).Average(pl => pl.Price);
             }
 
             if(ctx.Reviews.Where(r => r.ProductId == productDTO.Id).Count() > 0)
@@ -63,7 +63,22 @@ namespace Jineo.Controllers
             productDTO.Running = ctx.Sensors.Where(s => s.ProductId == productDTO.Id).Count();
             return View(productDTO);
         }
-        
+
+        public async Task<IActionResult> DeleteProductLink(string linkId)
+        {
+            var link = ctx.ProductLinks.Single(pl => pl.Id == int.Parse(linkId));
+            var productId = link.ProductId;
+            ctx.ProductLinks.Remove(link);
+            ctx.SaveChanges();
+            return RedirectToAction("ItemPage", new { id = productId });
+        }
+        public async Task<IActionResult> DeleteProduct(string productId)
+        {
+            var p = ctx.Products.Single(p => p.Id == int.Parse(productId));
+            ctx.Products.Remove(p);
+            ctx.SaveChanges();
+            return RedirectToAction("Store");
+        }
         public async Task<IActionResult> DeleteReview(string productId, string userId)
         {
             var r = ctx.Reviews.Single(r => r.ProductId == int.Parse(productId) && r.UserId == userId);
@@ -88,7 +103,7 @@ namespace Jineo.Controllers
             {
                 if(ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Count() > 0)
                 {    
-                    itemsDTO[x].AvgPrice = ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Average(pl => pl.Price);
+                    itemsDTO[x].AvgPrice = (int)ctx.ProductLinks.Where(pl => pl.ProductId == itemsDTO[x].Id).Average(pl => pl.Price);
                 }
                 if(ctx.Reviews.Where(pl => pl.ProductId == itemsDTO[x].Id).Count() > 0)
                 {    

@@ -39,6 +39,10 @@ namespace Jineo
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<TimedHostedService>();
                 });
     }
 }

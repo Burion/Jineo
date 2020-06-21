@@ -78,7 +78,7 @@
                 r.push('<div class="user-list-element">')        
                 r.push(response.users[key].userName)
                 r.push('</div>')
-                if(response.users[key].email != '@User.Identity.Name' && '@Model.ReadOnly' == 'true')
+                if(response.users[key].email != '@User.Identity.Name' && '@Model.ReadOnly' != 'true')
                 {
                     r.push('<div class="user-list-element" onclick="deleteUser(\'' + response.users[key].email + '\')">')
                     r.push('✖')  

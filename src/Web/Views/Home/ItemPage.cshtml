@@ -13,8 +13,14 @@
         <div class="row">
             <div class="col-5">
                 <div class="item-image-main rounded m-3" style="background-image: url('@Model.Image');">
-
                 </div>
+                @if(User.IsInRole("SuperAdmin"))
+                {
+                    <form asp-action="DeleteProduct">
+                        <input type="text" name="productId" value="@Model.Id" hidden>
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form>
+                }
             </div>
             <div class="col-3 m-3">
                 <h1>@Model.Name</h1>
@@ -56,7 +62,16 @@
                                     </td>
                                     <td>
                                     @link.Price $
-                                </td>
+                                    </td>
+                                    @if(User.IsInRole("SuperAdmin"))
+                                    {
+                                        <td>
+                                            <form asp-action="DeleteProductLink">
+                                                <input type="text" value="@link.Id" name="linkId" hidden>
+                                                <button type="submit" class="btn btn-outline-danger">X</button>
+                                            </form>
+                                        </td>
+                                    }
                             </tr>
                         }
                         @if(@User.IsInRole("SuperAdmin"))
@@ -65,16 +80,19 @@
                                 <form asp-action="AddLink">
 
                                     <td>
-                                        <select name="store" id="">
+                                        <select required name="store" id="">
+                                            <option value="">
+                                                ...
+                                            </option>
                                             <option value="Rozetka">Rozetka</option>
                                             <option value="Prom">Prom</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" name="link" placeholder="Link">
+                                        <input required type="text" name="link" placeholder="Link">
                                     </td>
                                     <td>
-                                        <input type="number" name="price" placeholder="Price">
+                                        <input required type="number" name="price" placeholder="Price">
                                     </td>
                                     <input type="text" name="productId" id="" value="@Model.Id" hidden>
                                     <td>

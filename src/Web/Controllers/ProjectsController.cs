@@ -169,6 +169,7 @@ namespace Jineo.Controllers
             return new JsonResult(new {status = "it's ok"});
         }
 
+        [AllowAnonymous]
         [Route("getsensors")]
         public JsonResult GetSensors(string projectId)
         {
@@ -200,34 +201,50 @@ namespace Jineo.Controllers
             smtpClient.Send(mail);
             return Content("Email has been sent.");
         }
-
+        [AllowAnonymous]
         [Route("getprojects/{email}")]
         public IActionResult GetProjectsByEmail(string email)
         {
             var user = ctx.Users.Single(u => u.Email == email);
             if(user == null)
                 return new JsonResult(new { projects = new ProjectModel[] { } });
-            var projects = ctx.UsersProjects.Where(up => up.User.Email == email);
+            var projects = ctx.UsersProjects.Where(up => up.User.Email == email).Select(up => up.Project);
             var projectsmodels = mapper.Map<ProjectModel[]>(projects);
             return new JsonResult(new { projects = projectsmodels });   
 
         }
-
+        [AllowAnonymous]
         [Route("getsensors/{projectId}")]
         public IActionResult GetSensorsJson(string projectId)
         {
-            var sensors = ctx.Sensors.Where(s => s.ProjectId == int.Parse(projectId));
-            var sensorsmodels = mapper.Map<SensorModel>(sensors);
+            var sensors = ctx.Sensors.Where(s => s.ProjectId == int.Parse(projectId)).ToList();
+            var sensorsmodels = mapper.Map<SensorModel[]>(sensors);
+            for(int x = 0; x < sensors.Count(); x++)
+            {
+                var meterings = Newtonsoft.Json.JsonConvert.DeserializeObject<MeteringModel[]>(sensors[x].Data);
+                var last = meterings.Last();
+                if(last.value > sensors[x].UpperValue || last.value < sensors[x].LowerValue)
+                    sensorsmodels[x].Status = "DANGER";
+                else
+                    sensorsmodels[x].Status = "OK";
+                string h = last.date.Hour > 9 ? last.date.Hour.ToString() : '0' + last.date.Hour.ToString();
+                string m = last.date.Minute > 9 ? last.date.Minute.ToString() : '0' + last.date.Minute.ToString();;
+                string mo = last.date.Month > 9 ? last.date.Month.ToString() : '0' + last.date.Month.ToString();
+                string d = last.date.Day > 9 ? last.date.Day.ToString() : '0' + last.date.Day.ToString();
+
+                string date = $"{h}:{m} {d}/{mo}";
+                sensorsmodels[x].Date = date;
+            }
             return new JsonResult(new { sensors = sensorsmodels });
         }
         [Route("addsensor")]
         public JsonResult AddSensor(string projectId, string x, string y, string name, string upperValue, string lowerValue, string productId) 
         {
             Random r = new Random();
-            List<object> meterings = new List<object>();
+            List<MeteringModel> meterings = new List<MeteringModel>();
             for(int a = 0; a < 30; a++)
             {
-                meterings.Add(new { value = r.Next(50, 100), date = DateTime.Now });
+                meterings.Add(new MeteringModel { value = r.Next(50, 100), date = DateTime.Now });
             }
             var json = meterings.ToArray();
             var _json = Newtonsoft.Json.JsonConvert.SerializeObject(json);

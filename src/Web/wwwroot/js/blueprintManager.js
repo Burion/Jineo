@@ -105,7 +105,7 @@ obs.forEach(o => {
     var sen = getSensorById(o.id)
     var _json = JSON.parse(sen.data)
     var danger = false
-    if(_json[_json.length - 1].value > sen.upperValue) {
+    if(_json[_json.length - 1].value > sen.upperValue || _json[_json.length - 1].value < sen.lowerValue) {
         danger = true
     }
     if(danger) {
@@ -137,6 +137,7 @@ function selectSensor(sensorId) {
         var href = '/store/' + _sensor.product.id
         var htm = "<a href='/home/store/" + _sensor.product.id + "'>" + _sensor.product.name + "</a>"
         document.getElementById('sensorname').innerHTML = htm
+        document.getElementById('sname').innerHTML = _sensor.name
         if(_sensor.product.productTypeId == 1)
         {
             document.getElementById('sensortype').innerHTML = 'Toughness'
