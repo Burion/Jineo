@@ -16,6 +16,7 @@ using Jineo.Models;
 using AutoMapper;
 using Jineo.Helpers;
 using Jineo.Extentions;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace Jineo
 {
@@ -51,6 +52,9 @@ namespace Jineo
             
             services.AddControllersWithViews();
            services.AddRazorPages();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+           services.AddMvc()
+           .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

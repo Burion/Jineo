@@ -24,20 +24,20 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="ProjectsPage">My projects</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="ProjectsPage">@Localizer["Projects"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="UploadAnalyzeFile">Analyzer</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="UploadAnalyzeFile">@Localizer["Analyzer"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Subscriptions">Subscriptions</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Subscriptions">@Localizer["Subscriptions"]</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Store">Store</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Store">@Localizer["Store"]</a>
                         </li>
                     </ul>
                 </div>
@@ -52,7 +52,10 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - Jineo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2020 - Jineo 
+            <a asp-area="" asp-controller="Home" asp-action="ChangeLocale" asp-route-locale="en-US">en</a>
+            <a asp-area="" asp-controller="Home" asp-action="ChangeLocale" asp-route-locale="ru-RU">ru</a>
+            <a asp-area="" asp-controller="Home" asp-action="ChangeLocale" asp-route-locale="uk">uk</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

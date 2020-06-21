@@ -13,23 +13,23 @@
                     <div class="item-image bronzecup"></div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label class="text-muted" for="">Low value</label>
+                    <label class="text-muted" for="">@Localizer["LowValue"]</label>
                     <div class="">
                         <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
                         <i class="glyphicon glyphicon-star-empty text-muted" aria-hidden="true"></i>
                         <i class="glyphicon glyphicon-star-empty text-muted" aria-hidden="true"></i>
                     </div>
                 </div>
-                <h4>Basic Subscription</h4>
+                <h4>@Localizer["Basic"]</h4>
                 <div>
-                    <p>No previligies</p>
+                    <p>@Localizer["BasicD"]</p>
                 </div>
                 <hr>
                 @if(ViewBag.SubId != 0)
                 {
                     <form asp-action="ChangeSubForMe" method="POST">
                         <input hidden type="text" name="subId" value="0">
-                        <button class="btn btn-outline-primary" type="submit">Switch</button>
+                        <button class="btn btn-outline-primary" type="submit">@Localizer["Switch"]</button>
                     </form>
                 }
                 else
@@ -47,23 +47,23 @@
                     <div class="item-image silvercup"></div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label class="text-muted" for="">Medium value</label>
+                    <label class="text-muted" for="">@Localizer["MedValue"]</label>
                     <div class="">
                         <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i>
                         <i class="glyphicon glyphicon-star text-muted" aria-hidden="true"></i> 
                         <i class="glyphicon glyphicon-star-empty text-muted" aria-hidden="true"></i>
                     </div>
                 </div>
-                <h4 class="text-muted">Silver Subscription</h4>
+                <h4 class="text-muted">@Localizer["Silver"]</h4>
                 <div>
-                    <p class="text-muted">5 projects</p>
+                    <p class="text-muted">@Localizer["SilverD"]</p>
                 </div>
                 <hr>
                 @if(ViewBag.SubId != 1)
                 {
                     <form asp-action="ChangeSubForMe" method="POST">
                         <input hidden type="text" name="subId" value="1">
-                        <button class="btn btn-outline-primary" type="submit">Switch</button>
+                        <button class="btn btn-outline-primary" type="submit">@Localizer["Switch"]</button>
                     </form>
                 }
                 else
@@ -82,23 +82,23 @@
                     <div class="item-image" style="background-image: url(https://png.pngtree.com/element_our/png/20181214/trophy-cup-graphic-design-template-vector-illustration-png_269508.jpg);"></div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <label class="text-warning" for="">Highest value</label>
+                    <label class="text-warning" for="">@Localizer["HiValue"]</label>
                     <div class="">
                         <i class="glyphicon glyphicon-star text-muted text-warning" aria-hidden="true"></i>
                         <i class="glyphicon glyphicon-star text-muted text-warning" aria-hidden="true"></i>
                         <i class="glyphicon glyphicon-star text-muted text-warning" aria-hidden="true"></i>
                     </div>
                 </div>
-                <h4 class="text-warning">Golden Subscription</h4>
+                <h4 class="text-warning">@Localizer["Golden"]</h4>
                 <div>
-                    <p class="text-warning">7 projects</p>
+                    <p class="text-warning">@Localizer["GoldenD"]</p>
                 </div>
                 <hr>
                 @if(ViewBag.SubId != 2)
                 {
                     <form asp-action="ChangeSubForMe" method="POST">
                         <input hidden type="text" name="subId" value="2">
-                        <button class="btn btn-outline-primary" type="submit">Switch</button>
+                        <button class="btn btn-outline-primary" type="submit">@Localizer["Switch"]</button>
                     </form>
                 }
                 else

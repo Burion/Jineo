@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using System.Globalization;
 
 namespace Jineo.Controllers
 {
@@ -23,6 +24,7 @@ namespace Jineo.Controllers
         private readonly ILogger<HomeController> _logger;
         readonly ApplicationDbContext ctx;
         readonly IMapper mapper;
+        
         
         IWebHostEnvironment _env;
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext ctx, IMapper mapper, IWebHostEnvironment appEnvironment)
@@ -34,6 +36,16 @@ namespace Jineo.Controllers
         }
 
         
+
+        public IActionResult ChangeLocale(string locale)
+        {   
+
+            var cultureInfo = new CultureInfo(locale);  
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+            return RedirectToAction("Index");
+
+        }
         public IActionResult Index()
         {
             return View();
