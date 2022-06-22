@@ -7,7 +7,7 @@
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest"/>
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0"/>
     <PackageReference Include="AutoMapper" Version="9.0.0"/>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
     <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.6.0"/>
   </ItemGroup>
   <ItemGroup>
